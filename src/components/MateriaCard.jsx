@@ -21,7 +21,7 @@ function MateriaCard({ materia, onEditar, onEliminar }) {
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      className={`absolute inset-x-2 top-1 z-10 rounded-xl bg-gradient-to-br ${colorClass} p-3 text-xs shadow-lg ${dragging ? 'opacity-60' : 'opacity-100'}`}
+      className={`absolute inset-x-2 top-1 z-10 rounded-2xl border border-white/10 bg-gradient-to-br ${colorClass} p-3 text-xs shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'}`}
       style={{ height }}
     >
       <div className="flex items-start justify-between gap-2">

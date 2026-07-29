@@ -33,16 +33,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
-      <header className="border-b border-slate-800 bg-slate-900/70 px-6 py-6 shadow-lg shadow-slate-950/30">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.16),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#0f172a_45%,_#111827_100%)] text-slate-100">
+      <header className="border-b border-slate-800/80 bg-slate-900/70 px-6 py-8 shadow-[0_20px_60px_rgba(2,6,23,0.35)] backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.35em] text-cyan-400">miHorario</p>
-            <h1 className="text-3xl font-semibold">Tu horario semanal en una sola vista</h1>
+            <p className="mb-2 text-sm uppercase tracking-[0.35em] text-sky-300">miHorario</p>
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-50">Horario Semanal</h1>
+            <p className="mt-2 max-w-2xl text-sm text-slate-400">JH</p>
           </div>
           <button
             onClick={abrirCrear}
-            className="rounded-xl bg-cyan-500 px-4 py-2 font-medium text-slate-950 transition hover:bg-cyan-400"
+            className="rounded-2xl border border-sky-400/40 bg-sky-500/15 px-4 py-2.5 font-medium text-sky-200 transition hover:bg-sky-500/25"
           >
             + Nueva materia
           </button>

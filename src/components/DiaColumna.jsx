@@ -21,8 +21,8 @@ function DiaColumna({ dia, materias, onEditar, onEliminar, onMover }) {
   };
 
   return (
-    <div className="min-w-[180px] flex-1 border-r border-slate-800 last:border-r-0">
-      <div className="flex h-14 items-center justify-center border-b border-slate-800 bg-slate-900/70 text-sm font-semibold text-slate-200">
+    <div className="min-w-[180px] flex-1 border-r border-slate-800/80 last:border-r-0">
+      <div className="flex h-14 items-center justify-center border-b border-slate-800/90 bg-slate-900/70 text-sm font-semibold text-slate-200">
         {dia}
       </div>
       {horas.map((hora) => {
@@ -34,7 +34,7 @@ function DiaColumna({ dia, materias, onEditar, onEliminar, onMover }) {
             key={`${dia}-${hora}`}
             onDrop={(e) => handleDrop(e, horaLabel)}
             onDragOver={(e) => e.preventDefault()}
-            className="relative h-20 border-b border-slate-800 bg-slate-950/50"
+            className="relative h-20 border-b border-slate-800/90 bg-[linear-gradient(180deg,_rgba(15,23,42,0.55),_rgba(2,6,23,0.75))]"
           >
             {materiasEnHora.map((materia) => (
               <MateriaCard
