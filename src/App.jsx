@@ -37,7 +37,7 @@ function App() {
       <header className="border-b border-slate-800/80 bg-slate-900/70 px-6 py-8 shadow-[0_20px_60px_rgba(2,6,23,0.35)] backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="mb-2 text-sm uppercase tracking-[0.35em] text-sky-300">miHorario</p>
+            <p className="mb-2 text-sm uppercase tracking-[0.35em] text-sky-300">App: miHorario</p>
             <h1 className="text-3xl font-semibold tracking-tight text-slate-50">Horario Semanal</h1>
             <p className="mt-2 max-w-2xl text-sm text-slate-400">JH</p>
           </div>
