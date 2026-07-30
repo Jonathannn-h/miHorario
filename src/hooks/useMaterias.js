@@ -31,8 +31,8 @@ export function useMaterias() {
     setMaterias((prev) => prev.filter((materia) => materia.id !== id));
   };
 
-  const moverMateria = (id, dia, horaInicio, horaFin) => {
-    setMaterias((prev) => prev.map((materia) => (materia.id === id ? { ...materia, dia, horaInicio, horaFin } : materia)));
+  const moverMateria = (id, dia) => {
+    setMaterias((prev) => prev.map((materia) => (materia.id === id ? { ...materia, dia } : materia)));
   };
 
   return { materias, agregarMateria, editarMateria, eliminarMateria, moverMateria };
