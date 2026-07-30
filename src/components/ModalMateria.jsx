@@ -9,6 +9,7 @@ const initialState = {
   dia: 'Lunes',
   horaInicio: '08:00',
   horaFin: '09:00',
+  color: '#60a5fa',
 };
 
 function ModalMateria({ open, onClose, materia, onSubmit }) {
@@ -52,6 +53,11 @@ function ModalMateria({ open, onClose, materia, onSubmit }) {
           </select>
           <input className="rounded-2xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none" type="time" name="horaInicio" value={form.horaInicio} onChange={handleChange} required />
           <input className="rounded-2xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none" type="time" name="horaFin" value={form.horaFin} onChange={handleChange} required />
+          <div className="md:col-span-2 flex items-center gap-3 rounded-2xl border border-slate-700 bg-slate-950/60 px-3 py-2.5">
+            <label className="text-sm text-slate-300">Color</label>
+            <input type="color" name="color" value={form.color} onChange={handleChange} className="h-9 w-12 cursor-pointer rounded border border-slate-700 bg-transparent p-1" />
+            <span className="text-sm text-slate-400">{form.color}</span>
+          </div>
           <div className="md:col-span-2 flex justify-end gap-3 pt-2">
             <Boton type="button" variant="secondary" onClick={onClose}>Cancelar</Boton>
             <Boton type="submit">Guardar</Boton>
