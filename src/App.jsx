@@ -43,7 +43,7 @@ function App() {
           </div>
           <button
             onClick={abrirCrear}
-            className="rounded-2xl border border-sky-400/40 bg-sky-500/15 px-4 py-2.5 font-medium text-sky-200 transition hover:bg-sky-500/25"
+            className="w-full md:w-auto rounded-2xl border border-sky-400/40 bg-sky-500/15 px-4 py-2.5 font-medium text-sky-200 transition hover:bg-sky-500/25"
           >
             + Nueva materia
           </button>

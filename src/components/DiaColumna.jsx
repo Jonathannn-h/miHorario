@@ -13,14 +13,14 @@ function DiaColumna({ dia, materias, onEditar, onEliminar, onMover, isToday }) {
   };
 
   return (
-    <div className="min-w-[220px] flex-1 border-r border-slate-800/80 last:border-r-0 bg-slate-950/80">
-      <div className={`flex h-16 items-center justify-center border-b px-3 text-center text-sm font-semibold ${isToday ? 'border-sky-400/50 bg-slate-800/90 text-sky-200' : 'border-slate-800/90 bg-slate-900/70 text-slate-200'}`}>
+    <div className="md:min-w-[220px] w-full flex-shrink-0 border-r border-slate-800/80 last:border-r-0 bg-slate-950/80">
+      <div className={`flex h-14 md:h-16 items-center justify-center border-b px-3 text-center text-sm font-semibold ${isToday ? 'border-sky-400/50 bg-slate-800/90 text-sky-200' : 'border-slate-800/90 bg-slate-900/70 text-slate-200'}`}>
         {dia}
       </div>
       <div
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
-        className="min-h-[420px] space-y-3 px-3 py-4"
+        className="min-h-[220px] space-y-3 px-3 py-4"
       >
         {materiasDelDia.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-slate-700/80 bg-slate-900/70 px-4 py-6 text-center text-sm text-slate-500">

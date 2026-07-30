@@ -20,7 +20,7 @@ function MateriaCard({ materia, onEditar, onEliminar }) {
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      className={`rounded-3xl border border-white/10 p-4 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab`}
+      className={`w-full rounded-3xl border border-white/10 p-4 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab`}
       style={cardStyle}
     >
       <div className="flex items-start justify-between gap-3">

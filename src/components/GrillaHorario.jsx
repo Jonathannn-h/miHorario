@@ -17,7 +17,7 @@ function GrillaHorario({ materias, onEditar, onEliminar, onMover }) {
 
   return (
     <div className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-slate-900/70 shadow-[0_25px_80px_rgba(2,6,23,0.35)] backdrop-blur">
-      <div className="flex overflow-x-auto">
+      <div className="flex flex-col md:flex-row md:overflow-x-auto gap-4 px-3 py-4">
         {DIAS.map((dia) => (
           <DiaColumna
             key={dia}
