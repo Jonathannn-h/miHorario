@@ -1,6 +1,6 @@
 import MateriaCard from './MateriaCard';
 
-function DiaColumna({ dia, materias, onEditar, onEliminar, onMover }) {
+function DiaColumna({ dia, materias, onEditar, onEliminar, onMover, isToday }) {
   const materiasDelDia = materias
     .filter((materia) => materia.dia === dia)
     .sort((a, b) => a.horaInicio.localeCompare(b.horaInicio));
@@ -14,7 +14,7 @@ function DiaColumna({ dia, materias, onEditar, onEliminar, onMover }) {
 
   return (
     <div className="min-w-[220px] flex-1 border-r border-slate-800/80 last:border-r-0 bg-slate-950/80">
-      <div className="flex h-16 items-center justify-center border-b border-slate-800/90 bg-slate-900/70 px-3 text-center text-sm font-semibold text-slate-200">
+      <div className={`flex h-16 items-center justify-center border-b px-3 text-center text-sm font-semibold ${isToday ? 'border-sky-400/50 bg-slate-800/90 text-sky-200' : 'border-slate-800/90 bg-slate-900/70 text-slate-200'}`}>
         {dia}
       </div>
       <div
