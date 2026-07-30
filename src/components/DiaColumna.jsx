@@ -13,7 +13,7 @@ function DiaColumna({ dia, materias, onEditar, onEliminar, onMover, isToday }) {
   };
 
   return (
-    <div className="md:min-w-[220px] w-full flex-shrink-0 border-r border-slate-800/80 last:border-r-0 bg-slate-950/80">
+    <div className="w-full md:w-[260px] md:flex-shrink-0 flex-none border-r border-slate-800/80 last:border-r-0 bg-slate-950/80">
       <div className={`flex h-14 md:h-16 items-center justify-center border-b px-3 text-center text-sm font-semibold ${isToday ? 'border-sky-400/50 bg-slate-800/90 text-sky-200' : 'border-slate-800/90 bg-slate-900/70 text-slate-200'}`}>
         {dia}
       </div>
