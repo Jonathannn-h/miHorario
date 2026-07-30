@@ -16,13 +16,19 @@ function MateriaCard({ materia, onEditar, onEliminar }) {
   const onDragEnd = () => setDragging(false);
 
   return (
-    <div
-      draggable
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-      className={`w-full rounded-3xl border border-white/10 p-4 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab`}
-      style={cardStyle}
-    >
+    <div className="relative group">
+      <div className="pointer-events-none absolute -top-10 left-1/2 hidden -translate-x-1/2 rounded-md bg-slate-800 px-2 py-1 text-xs text-slate-200 shadow-md transition-opacity duration-150 group-hover:block">
+        Arrastra para mover a otro día
+      </div>
+
+      <div
+        draggable
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        title="Arrastra para mover a otro día"
+        className={`w-full rounded-3xl border border-white/10 p-4 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab`}
+        style={cardStyle}
+      >
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-base font-semibold text-slate-950">{materia.nombre}</p>
@@ -36,6 +42,7 @@ function MateriaCard({ materia, onEditar, onEliminar }) {
       <div className="mt-3 space-y-1 text-[11px] text-slate-950/80">
         <p>{materia.aula} · {materia.seccion}</p>
         <p>{formatHora(materia.horaInicio)} - {formatHora(materia.horaFin)}</p>
+      </div>
       </div>
     </div>
   );
