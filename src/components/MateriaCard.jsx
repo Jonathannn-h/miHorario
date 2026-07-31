@@ -50,7 +50,7 @@ function MateriaCard({ materia, onEditar, onEliminar }) {
         open={confirmOpen}
         title="Confirmar eliminación"
         message={`¿Seguro que quieres eliminar ${materia.nombre}?`}
-        onConfirm={() => { onEliminar(materia.id); setConfirmOpen(false); }}
+        onConfirm={() => { onEliminar(materia); setConfirmOpen(false); }}
         onCancel={() => setConfirmOpen(false)}
       />
     </div>
