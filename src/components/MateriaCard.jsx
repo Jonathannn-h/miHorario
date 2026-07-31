@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { formatHora } from '../utils/formato';
+import ConfirmDialog from './ConfirmDialog';
 
 function MateriaCard({ materia, onEditar, onEliminar }) {
   const [dragging, setDragging] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const cardStyle = {
     background: `linear-gradient(135deg, ${materia.color || '#60a5fa'} 0%, ${materia.color || '#60a5fa'}cc 100%)`,
   };
@@ -36,7 +38,7 @@ function MateriaCard({ materia, onEditar, onEliminar }) {
         </div>
         <div className="flex gap-1">
           <button className="rounded-full bg-white/70 px-2 py-1 text-xs text-slate-950" onClick={(e) => { e.stopPropagation(); onEditar(materia); }}>Editar</button>
-          <button className="rounded-full bg-white/70 px-2 py-1 text-xs text-slate-950" onClick={(e) => { e.stopPropagation(); onEliminar(materia.id); }}>Borrar</button>
+          <button className="rounded-full bg-white/70 px-2 py-1 text-xs text-slate-950" onClick={(e) => { e.stopPropagation(); setConfirmOpen(true); }}>Borrar</button>
         </div>
       </div>
       <div className="mt-3 space-y-1 text-[11px] text-slate-950/80">
@@ -44,6 +46,13 @@ function MateriaCard({ materia, onEditar, onEliminar }) {
         <p>{formatHora(materia.horaInicio)} - {formatHora(materia.horaFin)}</p>
       </div>
       </div>
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Confirmar eliminación"
+        message={`¿Seguro que quieres eliminar ${materia.nombre}?`}
+        onConfirm={() => { onEliminar(materia.id); setConfirmOpen(false); }}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   );
 }
