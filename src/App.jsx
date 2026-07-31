@@ -1,12 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import GrillaHorario from './components/GrillaHorario';
 import ModalMateria from './components/ModalMateria';
+import UndoSnackbar from './components/UndoSnackbar';
 import { useMaterias } from './hooks/useMaterias';
 
 function App() {
-  const { materias, agregarMateria, editarMateria, eliminarMateria, moverMateria } = useMaterias();
+  const { materias, agregarMateria, editarMateria, eliminarMateria, restaurarMateria, moverMateria } = useMaterias();
   const [modalOpen, setModalOpen] = useState(false);
   const [materiaEditando, setMateriaEditando] = useState(null);
+  const [lastRemoved, setLastRemoved] = useState(null);
+  const [undoOpen, setUndoOpen] = useState(false);
+  const undoTimer = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (undoTimer.current) clearTimeout(undoTimer.current);
+    };
+  }, []);
 
   const abrirCrear = () => {
     setMateriaEditando(null);
@@ -32,6 +42,31 @@ function App() {
     cerrarModal();
   };
 
+  const handleEliminar = (materia) => {
+    eliminarMateria(materia.id);
+    setLastRemoved(materia);
+    setUndoOpen(true);
+    if (undoTimer.current) clearTimeout(undoTimer.current);
+    undoTimer.current = setTimeout(() => {
+      setUndoOpen(false);
+      setLastRemoved(null);
+    }, 5000);
+  };
+
+  const handleUndo = () => {
+    if (!lastRemoved) return;
+    restaurarMateria(lastRemoved);
+    setUndoOpen(false);
+    setLastRemoved(null);
+    if (undoTimer.current) clearTimeout(undoTimer.current);
+  };
+
+  const handleCloseUndo = () => {
+    setUndoOpen(false);
+    setLastRemoved(null);
+    if (undoTimer.current) clearTimeout(undoTimer.current);
+  };
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.16),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#0f172a_45%,_#111827_100%)] text-slate-100">
       <header className="border-b border-slate-800/80 bg-slate-900/70 px-6 py-8 shadow-[0_20px_60px_rgba(2,6,23,0.35)] backdrop-blur">
@@ -54,7 +89,7 @@ function App() {
         <GrillaHorario
           materias={materias}
           onEditar={abrirEditar}
-          onEliminar={eliminarMateria}
+          onEliminar={handleEliminar}
           onMover={moverMateria}
         />
       </main>
@@ -64,6 +99,13 @@ function App() {
         onClose={cerrarModal}
         materia={materiaEditando}
         onSubmit={guardarMateria}
+      />
+
+      <UndoSnackbar
+        open={undoOpen}
+        message="Materia eliminada"
+        onUndo={handleUndo}
+        onClose={handleCloseUndo}
       />
     </div>
   );
