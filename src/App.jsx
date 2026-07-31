@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import html2canvas from 'html2canvas';
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import GrillaHorario from './components/GrillaHorario';
 import ModalMateria from './components/ModalMateria';
 import UndoSnackbar from './components/UndoSnackbar';
 import { useMaterias } from './hooks/useMaterias';
+import { DIAS } from './utils/constantes';
 
 function App() {
   const { materias, agregarMateria, editarMateria, eliminarMateria, restaurarMateria, moverMateria } = useMaterias();
@@ -13,7 +13,6 @@ function App() {
   const [lastRemoved, setLastRemoved] = useState(null);
   const [undoOpen, setUndoOpen] = useState(false);
   const undoTimer = useRef(null);
-  const horarioRef = useRef(null);
 
   useEffect(() => {
     return () => {
@@ -71,38 +70,95 @@ function App() {
   };
 
   const descargarHorarioPdf = async () => {
-    if (!horarioRef.current) return;
+    try {
+      const pdfDoc = await PDFDocument.create();
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const pageWidth = 842;
+      const pageHeight = 595;
+      const margin = 40;
+      const headerHeight = 50;
+      const colWidth = (pageWidth - margin * 2) / DIAS.length;
+      const rowHeight = 80;
+      const page = pdfDoc.addPage([pageWidth, pageHeight]);
 
-    const canvas = await html2canvas(horarioRef.current, {
-      scale: 2,
-      backgroundColor: '#020617',
-      useCORS: true,
-    });
+      page.drawText('Horario Semanal', {
+        x: margin,
+        y: pageHeight - margin - 24,
+        size: 20,
+        font,
+        color: rgb(0.95, 0.95, 0.95),
+      });
 
-    const pngDataUrl = canvas.toDataURL('image/png');
-    const pngImageBytes = await fetch(pngDataUrl).then((res) => res.arrayBuffer());
+      DIAS.forEach((dia, index) => {
+        const x = margin + index * colWidth;
+        page.drawText(dia, {
+          x: x + 8,
+          y: pageHeight - margin - headerHeight,
+          size: 12,
+          font,
+          color: rgb(0.8, 0.8, 0.95),
+        });
+      });
 
-    const pdfDoc = await PDFDocument.create();
-    const pngImage = await pdfDoc.embedPng(pngImageBytes);
-    const pdfPage = pdfDoc.addPage([canvas.width, canvas.height]);
+      const materiasPorDia = DIAS.map((dia) =>
+        materias
+          .filter((materia) => materia.dia === dia)
+          .sort((a, b) => a.horaInicio.localeCompare(b.horaInicio))
+      );
 
-    pdfPage.drawImage(pngImage, {
-      x: 0,
-      y: 0,
-      width: canvas.width,
-      height: canvas.height,
-    });
+      materiasPorDia.forEach((lista, dayIndex) => {
+        const x = margin + dayIndex * colWidth;
+        lista.forEach((materia, materiaIndex) => {
+          const y = pageHeight - margin - headerHeight - 24 - materiaIndex * (rowHeight + 10);
+          const boxHeight = Math.min(rowHeight, y - margin);
+          page.drawRectangle({
+            x: x + 4,
+            y: y - boxHeight,
+            width: colWidth - 8,
+            height: boxHeight,
+            color: rgb(0.12, 0.18, 0.32),
+            borderColor: rgb(0.55, 0.65, 0.95),
+            borderWidth: 1,
+          });
+          page.drawText(`${materia.nombre}`, {
+            x: x + 12,
+            y: y - 22,
+            size: 11,
+            font,
+            color: rgb(0.95, 0.95, 0.95),
+          });
+          page.drawText(`${materia.aula} · ${materia.seccion}`, {
+            x: x + 12,
+            y: y - 36,
+            size: 9,
+            font,
+            color: rgb(0.75, 0.85, 0.95),
+          });
+          page.drawText(`${materia.horaInicio} - ${materia.horaFin}`, {
+            x: x + 12,
+            y: y - 50,
+            size: 9,
+            font,
+            color: rgb(0.75, 0.85, 0.95),
+          });
+        });
+      });
 
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'horario.pdf';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'horario.pdf';
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 3000);
+    } catch (error) {
+      console.error('Error al generar el PDF:', error);
+      alert('No se pudo descargar el PDF. Revisa la consola para más detalles.');
+    }
   };
 
   return (
@@ -132,7 +188,7 @@ function App() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div ref={horarioRef} className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-slate-900/70 shadow-[0_25px_80px_rgba(2,6,23,0.35)]">
+        <div className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-slate-900/70 shadow-[0_25px_80px_rgba(2,6,23,0.35)]">
           <GrillaHorario
             materias={materias}
             onEditar={abrirEditar}
