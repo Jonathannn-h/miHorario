@@ -43,7 +43,7 @@ function App() {
   };
 
   const handleEliminar = (materia) => {
-    eliminarMateria(materia.id);
+    eliminarMateria(materia);
     setLastRemoved(materia);
     setUndoOpen(true);
     if (undoTimer.current) clearTimeout(undoTimer.current);

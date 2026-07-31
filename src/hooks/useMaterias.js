@@ -27,11 +27,14 @@ export function useMaterias() {
     setMaterias((prev) => prev.map((materia) => (materia.id === id ? { ...materia, ...data } : materia)));
   };
 
-  const eliminarMateria = (id) => {
+  const eliminarMateria = (idOrMateria) => {
+    const id = typeof idOrMateria === 'object' ? idOrMateria?.id : idOrMateria;
+    if (!id) return;
     setMaterias((prev) => prev.filter((materia) => materia.id !== id));
   };
 
   const restaurarMateria = (materia) => {
+    if (!materia?.id) return;
     setMaterias((prev) => [...prev, materia]);
   };
 
