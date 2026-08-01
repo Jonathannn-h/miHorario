@@ -12,7 +12,7 @@ const initialState = {
   color: '#60a5fa',
 };
 
-function ModalMateria({ open, onClose, materia, onSubmit }) {
+function ModalMateria({ open, onClose, materia, onSubmit, isDark = false }) {
   const [form, setForm] = useState(initialState);
 
   useEffect(() => {
@@ -36,27 +36,27 @@ function ModalMateria({ open, onClose, materia, onSubmit }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 px-4 backdrop-blur-sm">
-      <div className="w-full max-w-xl rounded-3xl border border-slate-800/80 bg-slate-900/95 p-6 shadow-[0_25px_80px_rgba(2,6,23,0.45)]">
-        <h2 className="mb-5 text-2xl font-semibold text-slate-50">{materia ? 'Editar materia' : 'Crear materia'}</h2>
+    <div className={`fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-sm ${isDark ? 'bg-slate-950/75' : 'bg-slate-900/40'}`}>
+      <div className={`w-full max-w-xl rounded-3xl border p-6 shadow-[0_25px_80px_rgba(2,6,23,0.25)] ${isDark ? 'border-slate-800/80 bg-slate-900/95' : 'border-slate-200 bg-white/95'}`}>
+        <h2 className={`mb-5 text-2xl font-semibold ${isDark ? 'text-slate-50' : 'text-slate-900'}`}>{materia ? 'Editar materia' : 'Crear materia'}</h2>
         <form className="grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
-          <input className="rounded-2xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none ring-0 placeholder:text-slate-500" name="nombre" value={form.nombre} onChange={handleChange} placeholder="Nombre" required />
-          <input className="rounded-2xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none ring-0 placeholder:text-slate-500" name="profesor" value={form.profesor} onChange={handleChange} placeholder="Profesor" required />
-          <input className="rounded-2xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none ring-0 placeholder:text-slate-500" name="aula" value={form.aula} onChange={handleChange} placeholder="Aula" required />
-          <input className="rounded-2xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none ring-0 placeholder:text-slate-500" name="seccion" value={form.seccion} onChange={handleChange} placeholder="Sección" required />
-          <select className="rounded-2xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none" name="dia" value={form.dia} onChange={handleChange}>
+          <input className={`rounded-2xl border px-3 py-2.5 text-sm outline-none ring-0 ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100 placeholder:text-slate-500' : 'border-slate-300 bg-slate-50 text-slate-800 placeholder:text-slate-400'}`} name="nombre" value={form.nombre} onChange={handleChange} placeholder="Nombre" required />
+          <input className={`rounded-2xl border px-3 py-2.5 text-sm outline-none ring-0 ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100 placeholder:text-slate-500' : 'border-slate-300 bg-slate-50 text-slate-800 placeholder:text-slate-400'}`} name="profesor" value={form.profesor} onChange={handleChange} placeholder="Profesor" required />
+          <input className={`rounded-2xl border px-3 py-2.5 text-sm outline-none ring-0 ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100 placeholder:text-slate-500' : 'border-slate-300 bg-slate-50 text-slate-800 placeholder:text-slate-400'}`} name="aula" value={form.aula} onChange={handleChange} placeholder="Aula" required />
+          <input className={`rounded-2xl border px-3 py-2.5 text-sm outline-none ring-0 ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100 placeholder:text-slate-500' : 'border-slate-300 bg-slate-50 text-slate-800 placeholder:text-slate-400'}`} name="seccion" value={form.seccion} onChange={handleChange} placeholder="Sección" required />
+          <select className={`rounded-2xl border px-3 py-2.5 text-sm outline-none ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100' : 'border-slate-300 bg-slate-50 text-slate-800'}`} name="dia" value={form.dia} onChange={handleChange}>
             <option value="Lunes">Lunes</option>
             <option value="Martes">Martes</option>
             <option value="Miércoles">Miércoles</option>
             <option value="Jueves">Jueves</option>
             <option value="Viernes">Viernes</option>
           </select>
-          <input className="rounded-2xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none" type="time" name="horaInicio" value={form.horaInicio} onChange={handleChange} required />
-          <input className="rounded-2xl border border-slate-700 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 outline-none" type="time" name="horaFin" value={form.horaFin} onChange={handleChange} required />
-          <div className="md:col-span-2 flex items-center gap-3 rounded-2xl border border-slate-700 bg-slate-950/60 px-3 py-2.5">
-            <label className="text-sm text-slate-300">Color</label>
-            <input type="color" name="color" value={form.color} onChange={handleChange} className="h-9 w-12 cursor-pointer rounded border border-slate-700 bg-transparent p-1" />
-            <span className="text-sm text-slate-400">{form.color}</span>
+          <input className={`rounded-2xl border px-3 py-2.5 text-sm outline-none ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100' : 'border-slate-300 bg-slate-50 text-slate-800'}`} type="time" name="horaInicio" value={form.horaInicio} onChange={handleChange} required />
+          <input className={`rounded-2xl border px-3 py-2.5 text-sm outline-none ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100' : 'border-slate-300 bg-slate-50 text-slate-800'}`} type="time" name="horaFin" value={form.horaFin} onChange={handleChange} required />
+          <div className={`md:col-span-2 flex items-center gap-3 rounded-2xl border px-3 py-2.5 ${isDark ? 'border-slate-700 bg-slate-950/60' : 'border-slate-300 bg-slate-100'}`}>
+            <label className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Color</label>
+            <input type="color" name="color" value={form.color} onChange={handleChange} className={`h-9 w-12 cursor-pointer rounded border bg-transparent p-1 ${isDark ? 'border-slate-700' : 'border-slate-300'}`} />
+            <span className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{form.color}</span>
           </div>
           <div className="md:col-span-2 flex justify-end gap-3 pt-2">
             <Boton type="button" variant="secondary" onClick={onClose}>Cancelar</Boton>

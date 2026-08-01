@@ -6,19 +6,28 @@ import UndoSnackbar from './components/UndoSnackbar';
 import { useMaterias } from './hooks/useMaterias';
 import { DIAS } from './utils/constantes';
 
+function leerTemaInicial() {
+  if (typeof window === 'undefined') return 'dark';
+  const saved = window.localStorage.getItem('miHorario:theme');
+  return saved || 'dark';
+}
+
 function App() {
   const { materias, agregarMateria, editarMateria, eliminarMateria, restaurarMateria, moverMateria } = useMaterias();
   const [modalOpen, setModalOpen] = useState(false);
   const [materiaEditando, setMateriaEditando] = useState(null);
   const [lastRemoved, setLastRemoved] = useState(null);
   const [undoOpen, setUndoOpen] = useState(false);
+  const [theme, setTheme] = useState(() => leerTemaInicial());
   const undoTimer = useRef(null);
 
   useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    window.localStorage.setItem('miHorario:theme', theme);
     return () => {
       if (undoTimer.current) clearTimeout(undoTimer.current);
     };
-  }, []);
+  }, [theme]);
 
   const abrirCrear = () => {
     setMateriaEditando(null);
@@ -161,25 +170,37 @@ function App() {
     }
   };
 
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  const isDark = theme === 'dark';
+
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.16),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#0f172a_45%,_#111827_100%)] text-slate-100">
-      <header className="border-b border-slate-800/80 bg-slate-900/70 px-6 py-8 shadow-[0_20px_60px_rgba(2,6,23,0.35)] backdrop-blur">
+    <div className={`min-h-screen ${isDark ? 'bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.16),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#0f172a_45%,_#111827_100%)] text-slate-100' : 'bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),_transparent_30%),linear-gradient(135deg,_#f8fafc_0%,_#e0f2fe_45%,_#f8fafc_100%)] text-slate-800'}`}>
+      <header className={`${isDark ? 'border-slate-800/80 bg-slate-900/70' : 'border-slate-200 bg-white/80'} border-b px-6 py-8 shadow-[0_20px_60px_rgba(2,6,23,0.15)] backdrop-blur`}>
         <div className="mx-auto flex max-w-7xl flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="mb-2 text-sm uppercase tracking-[0.35em] text-sky-300">App: miHorario</p>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-50">Horario Semanal</h1>
-            <p className="mt-2 max-w-2xl text-sm text-slate-400">JH</p>
+            <p className={`mb-2 text-sm uppercase tracking-[0.35em] ${isDark ? 'text-sky-300' : 'text-sky-700'}`}>App: miHorario</p>
+            <h1 className={`text-3xl font-semibold tracking-tight ${isDark ? 'text-slate-50' : 'text-slate-900'}`}>Horario Semanal</h1>
+            <p className={`mt-2 max-w-2xl text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>JH</p>
           </div>
           <div className="flex w-full flex-col gap-3 md:flex-row md:items-center">
             <button
+              onClick={toggleTheme}
+              className={`w-full md:w-auto rounded-2xl border px-4 py-2.5 font-medium transition ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-100 hover:bg-slate-700/90' : 'border-slate-300 bg-slate-100 text-slate-800 hover:bg-slate-200'}`}
+            >
+              {isDark ? '☀️ Modo claro' : '🌙 Modo oscuro'}
+            </button>
+            <button
               onClick={abrirCrear}
-              className="w-full md:w-auto rounded-2xl border border-sky-400/40 bg-sky-500/15 px-4 py-2.5 font-medium text-sky-200 transition hover:bg-sky-500/25"
+              className={`w-full md:w-auto rounded-2xl border px-4 py-2.5 font-medium transition ${isDark ? 'border-sky-400/40 bg-sky-500/15 text-sky-200 hover:bg-sky-500/25' : 'border-sky-300 bg-sky-100 text-sky-800 hover:bg-sky-200'}`}
             >
               + Nueva materia
             </button>
             <button
               onClick={descargarHorarioPdf}
-              className="w-full md:w-auto rounded-2xl border border-slate-700/70 bg-slate-800/80 px-4 py-2.5 font-medium text-slate-100 transition hover:bg-slate-700/90"
+              className={`w-full md:w-auto rounded-2xl border px-4 py-2.5 font-medium transition ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-100 hover:bg-slate-700/90' : 'border-slate-300 bg-slate-100 text-slate-800 hover:bg-slate-200'}`}
             >
               Descargar PDF
             </button>
@@ -188,12 +209,13 @@ function App() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="overflow-hidden rounded-[28px] border border-slate-800/80 bg-slate-900/70 shadow-[0_25px_80px_rgba(2,6,23,0.35)]">
+        <div className={`overflow-hidden rounded-[28px] border shadow-[0_25px_80px_rgba(2,6,23,0.15)] ${isDark ? 'border-slate-800/80 bg-slate-900/70' : 'border-slate-200 bg-white/80'}`}>
           <GrillaHorario
             materias={materias}
             onEditar={abrirEditar}
             onEliminar={handleEliminar}
             onMover={moverMateria}
+            isDark={isDark}
           />
         </div>
       </main>
@@ -203,6 +225,7 @@ function App() {
         onClose={cerrarModal}
         materia={materiaEditando}
         onSubmit={guardarMateria}
+        isDark={isDark}
       />
 
       <UndoSnackbar
@@ -210,6 +233,7 @@ function App() {
         message="Materia eliminada"
         onUndo={handleUndo}
         onClose={handleCloseUndo}
+        isDark={isDark}
       />
     </div>
   );

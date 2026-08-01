@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { formatHora } from '../utils/formato';
 import ConfirmDialog from './ConfirmDialog';
 
-function MateriaCard({ materia, onEditar, onEliminar }) {
+function MateriaCard({ materia, onEditar, onEliminar, isDark = false }) {
   const [dragging, setDragging] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
@@ -20,7 +20,7 @@ function MateriaCard({ materia, onEditar, onEliminar }) {
 
   return (
     <div className="relative group">
-      <div className="pointer-events-none absolute -top-10 left-1/2 hidden -translate-x-1/2 rounded-md bg-slate-800 px-2 py-1 text-xs text-slate-200 shadow-md transition-opacity duration-150 group-hover:block">
+      <div className={`pointer-events-none absolute -top-10 left-1/2 hidden -translate-x-1/2 rounded-md px-2 py-1 text-xs shadow-md transition-opacity duration-150 group-hover:block ${isDark ? 'bg-slate-800 text-slate-200' : 'bg-slate-700 text-slate-100'}`}>
         Arrastra para mover a otro día
       </div>
 
@@ -34,15 +34,15 @@ function MateriaCard({ materia, onEditar, onEliminar }) {
       >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-base font-semibold text-slate-950">{materia.nombre}</p>
-          <p className="mt-1 text-xs text-slate-950/80">{materia.profesor}</p>
+          <p className={`text-base font-semibold ${isDark ? 'text-slate-950' : 'text-slate-900'}`}>{materia.nombre}</p>
+          <p className={`mt-1 text-xs ${isDark ? 'text-slate-950/80' : 'text-slate-800/80'}`}>{materia.profesor}</p>
         </div>
         <div className="flex gap-1">
-          <button className="rounded-full bg-white/70 px-2 py-1 text-xs text-slate-950" onClick={(e) => { e.stopPropagation(); onEditar(materia); }}>Editar</button>
-          <button className="rounded-full bg-white/70 px-2 py-1 text-xs text-slate-950" onClick={(e) => { e.stopPropagation(); setConfirmOpen(true); }}>Borrar</button>
+          <button className={`rounded-full px-2 py-1 text-xs ${isDark ? 'bg-white/70 text-slate-950' : 'bg-slate-900/10 text-slate-900'}`} onClick={(e) => { e.stopPropagation(); onEditar(materia); }}>Editar</button>
+          <button className={`rounded-full px-2 py-1 text-xs ${isDark ? 'bg-white/70 text-slate-950' : 'bg-slate-900/10 text-slate-900'}`} onClick={(e) => { e.stopPropagation(); setConfirmOpen(true); }}>Borrar</button>
         </div>
       </div>
-      <div className="mt-3 space-y-1 text-[11px] text-slate-950/80">
+      <div className={`mt-3 space-y-1 text-[11px] ${isDark ? 'text-slate-950/80' : 'text-slate-800/80'}`}>
         <p>{materia.aula} · {materia.seccion}</p>
         <p>{formatHora(materia.horaInicio)} - {formatHora(materia.horaFin)}</p>
       </div>
