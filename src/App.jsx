@@ -86,7 +86,7 @@ function App() {
         y: pageHeight - margin - 24,
         size: 20,
         font,
-        color: rgb(0.95, 0.95, 0.95),
+        color: rgb(0.04, 0.12, 0.25),
       });
 
       DIAS.forEach((dia, index) => {
