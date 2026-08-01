@@ -81,13 +81,13 @@ function App() {
       const rowHeight = 80;
       const page = pdfDoc.addPage([pageWidth, pageHeight]);
 
-      page.drawText('Horario Semanal', {
+      /*page.drawText('Horario Semanal', {
         x: margin,
         y: pageHeight - margin - 24,
         size: 20,
         font,
         color: rgb(0.04, 0.12, 0.25),
-      });
+      });*/
 
       DIAS.forEach((dia, index) => {
         const x = margin + index * colWidth;
@@ -96,7 +96,7 @@ function App() {
           y: pageHeight - margin - headerHeight,
           size: 12,
           font,
-          color: rgb(0.8, 0.8, 0.95),
+          color: rgb(0.04, 0.12, 0.25),
         });
       });
 
