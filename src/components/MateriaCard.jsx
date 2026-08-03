@@ -6,6 +6,7 @@ function MateriaCard({ materia, onEditar, onEliminar, isDark = false }) {
   const [dragging, setDragging] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
+  const [dropPulse, setDropPulse] = useState(false);
   const cardStyle = {
     background: `linear-gradient(135deg, ${materia.color || '#60a5fa'} 0%, ${materia.color || '#60a5fa'}cc 100%)`,
   };
@@ -16,7 +17,11 @@ function MateriaCard({ materia, onEditar, onEliminar, isDark = false }) {
     setDragging(true);
   };
 
-  const onDragEnd = () => setDragging(false);
+  const onDragEnd = () => {
+    setDragging(false);
+    setDropPulse(true);
+    window.setTimeout(() => setDropPulse(false), 220);
+  };
 
   return (
     <div className="relative group">
@@ -29,7 +34,7 @@ function MateriaCard({ materia, onEditar, onEliminar, isDark = false }) {
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         title="Arrastra para mover a otro día"
-        className={`w-full rounded-3xl border border-white/10 p-4 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab transition-transform duration-300 ${removing ? 'animate-fade-out scale-95 opacity-0' : ''}`}
+        className={`w-full rounded-3xl border border-white/10 p-4 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab transition-all duration-300 ${dropPulse ? 'scale-[1.01] translate-y-[-2px]' : ''} ${removing ? 'animate-fade-out scale-95 opacity-0' : ''}`}
         style={cardStyle}
       >
       <div className="flex items-start justify-between gap-3">
