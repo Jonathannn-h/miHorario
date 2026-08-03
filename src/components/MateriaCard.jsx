@@ -18,6 +18,7 @@ function MateriaCard({ materia, onEditar, onEliminar, onDuplicar, isDark = false
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [dropPulse, setDropPulse] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const colorBase = materia.color || '#60a5fa';
   const colorTexto = obtenerColorTextoContraste(colorBase);
   const esFondoClaro = colorTexto === '#0f172a';
@@ -61,10 +62,53 @@ function MateriaCard({ materia, onEditar, onEliminar, onDuplicar, isDark = false
           <p className="text-base font-semibold" style={{ color: colorTexto }}>{materia.nombre}</p>
           <p className="mt-1 text-xs" style={{ color: colorTexto }}>{materia.profesor}</p>
         </div>
-        <div className="flex gap-1">
-          <button style={botonStyle} className="rounded-full px-2 py-1 text-xs" onClick={(e) => { e.stopPropagation(); onDuplicar?.(materia.id); }}>Duplicar</button>
-          <button style={botonStyle} className="rounded-full px-2 py-1 text-xs" onClick={(e) => { e.stopPropagation(); onEditar(materia); }}>Editar</button>
-          <button style={botonStyle} className="rounded-full px-2 py-1 text-xs" onClick={(e) => { e.stopPropagation(); setConfirmOpen(true); }}>Borrar</button>
+        <div className="relative">
+          <button
+            style={botonStyle}
+            className="flex h-8 w-8 items-center justify-center rounded-full text-lg leading-none"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuOpen((prev) => !prev);
+            }}
+            aria-label="Abrir acciones"
+          >
+            ⋯
+          </button>
+
+          {menuOpen && (
+            <div className={`absolute right-0 z-10 mt-2 min-w-[140px] rounded-2xl border p-2 shadow-lg ${isDark ? 'border-slate-700 bg-slate-900/95 text-slate-100' : 'border-slate-200 bg-white/95 text-slate-800'}`}>
+              <button
+                className="flex w-full items-center rounded-xl px-3 py-2 text-left text-sm transition hover:bg-slate-100/70 dark:hover:bg-slate-800/70"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(false);
+                  onDuplicar?.(materia.id);
+                }}
+              >
+                Duplicar
+              </button>
+              <button
+                className="flex w-full items-center rounded-xl px-3 py-2 text-left text-sm transition hover:bg-slate-100/70 dark:hover:bg-slate-800/70"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(false);
+                  onEditar(materia);
+                }}
+              >
+                Editar
+              </button>
+              <button
+                className="flex w-full items-center rounded-xl px-3 py-2 text-left text-sm transition hover:bg-slate-100/70 dark:hover:bg-slate-800/70"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(false);
+                  setConfirmOpen(true);
+                }}
+              >
+                Eliminar
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div className="mt-3 space-y-1 text-[11px]" style={{ color: colorTexto }}>
