@@ -70,10 +70,6 @@ export function calcularConsejos(materias = []) {
 
     const huecos = [];
 
-    if (horaEnMinutos(ordenadas[0].horaInicio) > HORA_INICIO_DIA) {
-      huecos.push({ inicio: HORA_INICIO_DIA, fin: horaEnMinutos(ordenadas[0].horaInicio), duracionMinutos: horaEnMinutos(ordenadas[0].horaInicio) - HORA_INICIO_DIA });
-    }
-
     for (let i = 1; i < ordenadas.length; i += 1) {
       const anterior = ordenadas[i - 1];
       const actual = ordenadas[i];
@@ -83,11 +79,6 @@ export function calcularConsejos(materias = []) {
       if (inicioActual > inicioAnterior) {
         huecos.push({ inicio: inicioAnterior, fin: inicioActual, duracionMinutos: inicioActual - inicioAnterior });
       }
-    }
-
-    const ultima = ordenadas[ordenadas.length - 1];
-    if (horaEnMinutos(ultima.horaFin) < HORA_FIN_DIA) {
-      huecos.push({ inicio: horaEnMinutos(ultima.horaFin), fin: HORA_FIN_DIA, duracionMinutos: HORA_FIN_DIA - horaEnMinutos(ultima.horaFin) });
     }
 
     return {
