@@ -3,7 +3,7 @@ import { calcularConsejos } from '../utils/consejos';
 import { minutosAHora } from '../utils/formato';
 
 function PanelConsejos({ materias, isDark = false }) {
-  const [abierto, setAbierto] = useState(true);
+  const [abierto, setAbierto] = useState(false);
   const consejos = useMemo(() => calcularConsejos(materias), [materias]);
 
   const renderBloque = (titulo, items, tono) => {
