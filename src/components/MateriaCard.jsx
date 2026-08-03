@@ -34,7 +34,7 @@ function MateriaCard({ materia, onEditar, onEliminar, isDark = false }) {
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         title="Arrastra para mover a otro día"
-        className={`w-full rounded-3xl border border-white/10 p-4 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab transition-all duration-300 ${dropPulse ? 'scale-[1.01] translate-y-[-2px]' : ''} ${removing ? 'animate-fade-out scale-95 opacity-0' : ''}`}
+        className={`w-full rounded-3xl border border-white/10 p-4 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab transition-all duration-300 ${dropPulse ? 'scale-[1.03] -translate-y-2 shadow-[0_16px_36px_rgba(15,23,42,0.35)]' : ''} ${removing ? 'animate-fade-out scale-95 opacity-0' : ''}`}
         style={cardStyle}
       >
       <div className="flex items-start justify-between gap-3">
