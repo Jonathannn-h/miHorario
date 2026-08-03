@@ -50,6 +50,7 @@ function ModalMateria({ open, onClose, materia, onSubmit, isDark = false }) {
             <option value="Miércoles">Miércoles</option>
             <option value="Jueves">Jueves</option>
             <option value="Viernes">Viernes</option>
+            <option value="Sábado">Sábado</option>
           </select>
           <input className={`rounded-2xl border px-3 py-2.5 text-sm outline-none ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100' : 'border-slate-300 bg-slate-50 text-slate-800'}`} type="time" name="horaInicio" value={form.horaInicio} onChange={handleChange} required />
           <input className={`rounded-2xl border px-3 py-2.5 text-sm outline-none ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100' : 'border-slate-300 bg-slate-50 text-slate-800'}`} type="time" name="horaFin" value={form.horaFin} onChange={handleChange} required />
