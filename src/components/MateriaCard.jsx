@@ -54,13 +54,13 @@ function MateriaCard({ materia, onEditar, onEliminar, onDuplicar, isDark = false
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         title="Arrastra para mover a otro día"
-        className={`w-full rounded-3xl border border-white/10 p-4 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.25)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab transition-all duration-300 ${dropPulse ? 'scale-[1.03] -translate-y-2 shadow-[0_16px_36px_rgba(15,23,42,0.35)]' : ''} ${removing ? 'animate-fade-out scale-95 opacity-0' : ''}`}
+        className={`w-full rounded-[24px] border border-white/10 p-5 text-sm shadow-[0_10px_30px_rgba(15,23,42,0.28)] ${dragging ? 'opacity-60' : 'opacity-100'} cursor-grab transition-all duration-300 ${dropPulse ? 'scale-[1.03] -translate-y-2 shadow-[0_18px_40px_rgba(15,23,42,0.38)]' : ''} ${removing ? 'animate-fade-out scale-95 opacity-0' : ''}`}
         style={cardStyle}
       >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <p className="break-words text-base font-semibold" style={{ color: colorTexto }}>{materia.nombre}</p>
-          <p className="mt-1 break-words text-xs" style={{ color: colorTexto }}>{materia.profesor}</p>
+          <p className="break-words text-[15px] font-semibold leading-5" style={{ color: colorTexto }}>{materia.nombre}</p>
+          <p className="mt-1.5 break-words text-xs leading-5" style={{ color: colorTexto }}>{materia.profesor}</p>
         </div>
         <div className="relative shrink-0">
           <button
@@ -111,7 +111,7 @@ function MateriaCard({ materia, onEditar, onEliminar, onDuplicar, isDark = false
           )}
         </div>
       </div>
-      <div className="mt-3 space-y-1 break-words text-[11px]" style={{ color: colorTexto }}>
+      <div className="mt-4 space-y-1.5 break-words text-[11px] leading-5" style={{ color: colorTexto }}>
         <p>{materia.aula} · {materia.seccion}</p>
         <p>{formatHora(materia.horaInicio)} - {formatHora(materia.horaFin)}</p>
       </div>
