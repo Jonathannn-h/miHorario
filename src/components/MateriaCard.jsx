@@ -2,13 +2,32 @@ import { useState } from 'react';
 import { formatHora } from '../utils/formato';
 import ConfirmDialog from './ConfirmDialog';
 
+function obtenerColorTextoContraste(hexColor = '#60a5fa') {
+  const limpio = (hexColor || '#60a5fa').replace('#', '');
+  const completo = limpio.length === 3 ? limpio.split('').map((c) => c + c).join('') : limpio;
+  const valor = parseInt(completo, 16);
+  const r = (valor >> 16) & 255;
+  const g = (valor >> 8) & 255;
+  const b = valor & 255;
+  const luminancia = 0.2126 * (r / 255) + 0.7152 * (g / 255) + 0.0722 * (b / 255);
+  return luminancia > 0.6 ? '#0f172a' : '#f8fafc';
+}
+
 function MateriaCard({ materia, onEditar, onEliminar, isDark = false }) {
   const [dragging, setDragging] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [dropPulse, setDropPulse] = useState(false);
+  const colorBase = materia.color || '#60a5fa';
+  const colorTexto = obtenerColorTextoContraste(colorBase);
+  const esFondoClaro = colorTexto === '#0f172a';
   const cardStyle = {
-    background: `linear-gradient(135deg, ${materia.color || '#60a5fa'} 0%, ${materia.color || '#60a5fa'}cc 100%)`,
+    background: `linear-gradient(135deg, ${colorBase} 0%, ${colorBase}cc 100%)`,
+    color: colorTexto,
+  };
+  const botonStyle = {
+    backgroundColor: esFondoClaro ? 'rgba(15, 23, 42, 0.08)' : 'rgba(255, 255, 255, 0.16)',
+    color: colorTexto,
   };
 
   const onDragStart = (e) => {
@@ -39,15 +58,15 @@ function MateriaCard({ materia, onEditar, onEliminar, isDark = false }) {
       >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className={`text-base font-semibold ${isDark ? 'text-slate-950' : 'text-slate-900'}`}>{materia.nombre}</p>
-          <p className={`mt-1 text-xs ${isDark ? 'text-slate-950/80' : 'text-slate-800/80'}`}>{materia.profesor}</p>
+          <p className="text-base font-semibold" style={{ color: colorTexto }}>{materia.nombre}</p>
+          <p className="mt-1 text-xs" style={{ color: colorTexto }}>{materia.profesor}</p>
         </div>
         <div className="flex gap-1">
-          <button className={`rounded-full px-2 py-1 text-xs ${isDark ? 'bg-white/70 text-slate-950' : 'bg-slate-900/10 text-slate-900'}`} onClick={(e) => { e.stopPropagation(); onEditar(materia); }}>Editar</button>
-          <button className={`rounded-full px-2 py-1 text-xs ${isDark ? 'bg-white/70 text-slate-950' : 'bg-slate-900/10 text-slate-900'}`} onClick={(e) => { e.stopPropagation(); setConfirmOpen(true); }}>Borrar</button>
+          <button style={botonStyle} className="rounded-full px-2 py-1 text-xs" onClick={(e) => { e.stopPropagation(); onEditar(materia); }}>Editar</button>
+          <button style={botonStyle} className="rounded-full px-2 py-1 text-xs" onClick={(e) => { e.stopPropagation(); setConfirmOpen(true); }}>Borrar</button>
         </div>
       </div>
-      <div className={`mt-3 space-y-1 text-[11px] ${isDark ? 'text-slate-950/80' : 'text-slate-800/80'}`}>
+      <div className="mt-3 space-y-1 text-[11px]" style={{ color: colorTexto }}>
         <p>{materia.aula} · {materia.seccion}</p>
         <p>{formatHora(materia.horaInicio)} - {formatHora(materia.horaFin)}</p>
       </div>
