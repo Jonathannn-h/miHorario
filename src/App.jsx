@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import GrillaHorario from './components/GrillaHorario';
 import ModalMateria from './components/ModalMateria';
+import PanelConsejos from './components/PanelConsejos';
 import UndoSnackbar from './components/UndoSnackbar';
 import { useMaterias } from './hooks/useMaterias';
 import { DIAS } from './utils/constantes';
@@ -209,6 +210,7 @@ function App() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <PanelConsejos materias={materias} isDark={isDark} />
         <div className={`overflow-hidden rounded-[28px] border shadow-[0_25px_80px_rgba(2,6,23,0.15)] ${isDark ? 'border-slate-800/80 bg-slate-900/70' : 'border-slate-200 bg-white/80'}`}>
           <GrillaHorario
             materias={materias}
