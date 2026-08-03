@@ -32,13 +32,20 @@ function PanelConsejos({ materias, isDark = false }) {
   };
 
   const choques = consejos.choques.map((choque) => `${choque.dia}: ${choque.materiaA} y ${choque.materiaB} se solapan de ${minutosAHora(choque.inicioSolape)} a ${minutosAHora(choque.finSolape)}.`);
-  const diaMasCargado = consejos.diaMasCargado.totalMinutes === 0
-    ? 'Aún no hay materias cargadas.'
-    : `${consejos.diaMasCargado.dia} es el día más cargado con ${Math.round(consejos.diaMasCargado.totalMinutos / 60)} horas de clases.`;
+
+  const diasMasCargados = consejos.diasMasCargados.length === 0
+    ? ['Todavía no hay materias cargadas.']
+    : consejos.diasMasCargados.map((item) => `${item.dia} (${Math.round(item.totalMinutos / 60)}h)`).join(' · ');
+
   const huecos = consejos.huecosLibres
     .filter((hueco) => hueco.duracionMinutos > 0)
     .slice(0, 4)
     .map((hueco) => `${hueco.dia}: libre de ${minutosAHora(hueco.inicio)} a ${minutosAHora(hueco.fin)} (${Math.round(hueco.duracionMinutos / 60)}h).`);
+
+  const huecosVacios = consejos.huecosLibres.filter((hueco) => hueco.duracionMinutos > 0);
+  const mensajeDiasVacios = consejos.cargas
+    .filter((item) => item.totalMinutos === 0)
+    .map((item) => `${item.dia}: No tienes materias este día.`);
 
   return (
     <div className={`mb-6 rounded-[24px] border shadow-sm ${isDark ? 'border-slate-800 bg-slate-900/70' : 'border-slate-200 bg-white/80'}`}>
@@ -56,8 +63,8 @@ function PanelConsejos({ materias, isDark = false }) {
       {abierto && (
         <div className="grid gap-3 border-t px-4 py-4 md:grid-cols-3">
           {renderBloque('Choques de horario', choques, 'alerta')}
-          {renderBloque('Día más cargado', [diaMasCargado], 'info')}
-          {renderBloque('Huecos libres', huecos, 'default')}
+          {renderBloque('Día más cargado', [diasMasCargados], 'info')}
+          {renderBloque('Huecos libres', huecosVacios.length > 0 ? huecos : mensajeDiasVacios.length > 0 ? mensajeDiasVacios : ['No hay huecos libres para mostrar.'], 'default')}
         </div>
       )}
     </div>
