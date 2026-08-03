@@ -13,7 +13,7 @@ function obtenerColorTextoContraste(hexColor = '#60a5fa') {
   return luminancia > 0.6 ? '#0f172a' : '#f8fafc';
 }
 
-function MateriaCard({ materia, onEditar, onEliminar, isDark = false }) {
+function MateriaCard({ materia, onEditar, onEliminar, onDuplicar, isDark = false }) {
   const [dragging, setDragging] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
@@ -62,6 +62,7 @@ function MateriaCard({ materia, onEditar, onEliminar, isDark = false }) {
           <p className="mt-1 text-xs" style={{ color: colorTexto }}>{materia.profesor}</p>
         </div>
         <div className="flex gap-1">
+          <button style={botonStyle} className="rounded-full px-2 py-1 text-xs" onClick={(e) => { e.stopPropagation(); onDuplicar?.(materia.id); }}>Duplicar</button>
           <button style={botonStyle} className="rounded-full px-2 py-1 text-xs" onClick={(e) => { e.stopPropagation(); onEditar(materia); }}>Editar</button>
           <button style={botonStyle} className="rounded-full px-2 py-1 text-xs" onClick={(e) => { e.stopPropagation(); setConfirmOpen(true); }}>Borrar</button>
         </div>

@@ -12,7 +12,7 @@ function obtenerDiaActual() {
   return dias[new Date().getDay()] || null;
 }
 
-function GrillaHorario({ materias, onEditar, onEliminar, onMover, onCrear, isDark = false }) {
+function GrillaHorario({ materias, onEditar, onEliminar, onDuplicar, onMover, onCrear, isDark = false }) {
   const diaActual = obtenerDiaActual();
 
   if (materias.length === 0) {
@@ -55,6 +55,7 @@ function GrillaHorario({ materias, onEditar, onEliminar, onMover, onCrear, isDar
             materias={materias}
             onEditar={onEditar}
             onEliminar={onEliminar}
+            onDuplicar={onDuplicar}
             onMover={onMover}
             isToday={dia === diaActual}
             isDark={isDark}

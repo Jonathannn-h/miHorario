@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import MateriaCard from './MateriaCard';
 
-function DiaColumna({ dia, materias, onEditar, onEliminar, onMover, isToday, isDark = false }) {
+function DiaColumna({ dia, materias, onEditar, onEliminar, onDuplicar, onMover, isToday, isDark = false }) {
   const [isActive, setIsActive] = useState(false);
   const materiasDelDia = materias
     .filter((materia) => materia.dia === dia)
@@ -57,6 +57,7 @@ function DiaColumna({ dia, materias, onEditar, onEliminar, onMover, isToday, isD
               materia={materia}
               onEditar={onEditar}
               onEliminar={onEliminar}
+              onDuplicar={onDuplicar}
               isDark={isDark}
             />
           ))

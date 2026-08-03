@@ -14,7 +14,7 @@ function leerTemaInicial() {
 }
 
 function App() {
-  const { materias, agregarMateria, editarMateria, eliminarMateria, restaurarMateria, moverMateria } = useMaterias();
+  const { materias, agregarMateria, editarMateria, duplicarMateria, eliminarMateria, restaurarMateria, moverMateria } = useMaterias();
   const [modalOpen, setModalOpen] = useState(false);
   const [materiaEditando, setMateriaEditando] = useState(null);
   const [lastRemoved, setLastRemoved] = useState(null);
@@ -216,6 +216,7 @@ function App() {
             materias={materias}
             onEditar={abrirEditar}
             onEliminar={handleEliminar}
+            onDuplicar={duplicarMateria}
             onMover={moverMateria}
             onCrear={abrirCrear}
             isDark={isDark}

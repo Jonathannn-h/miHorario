@@ -27,6 +27,21 @@ export function useMaterias() {
     setMaterias((prev) => prev.map((materia) => (materia.id === id ? { ...materia, ...data } : materia)));
   };
 
+  const duplicarMateria = (id) => {
+    setMaterias((prev) => {
+      const materia = prev.find((item) => item.id === id);
+      if (!materia) return prev;
+
+      const copia = {
+        ...materia,
+        id: crypto.randomUUID(),
+        nombre: `${materia.nombre} (copia)`,
+      };
+
+      return [...prev, copia];
+    });
+  };
+
   const eliminarMateria = (idOrMateria) => {
     const id = typeof idOrMateria === 'object' ? idOrMateria?.id : idOrMateria;
     if (!id) return;
@@ -42,5 +57,5 @@ export function useMaterias() {
     setMaterias((prev) => prev.map((materia) => (materia.id === id ? { ...materia, dia } : materia)));
   };
 
-  return { materias, agregarMateria, editarMateria, eliminarMateria, restaurarMateria, moverMateria };
+  return { materias, agregarMateria, editarMateria, duplicarMateria, eliminarMateria, restaurarMateria, moverMateria };
 }
