@@ -215,6 +215,7 @@ function App() {
             onEditar={abrirEditar}
             onEliminar={handleEliminar}
             onMover={moverMateria}
+            onCrear={abrirCrear}
             isDark={isDark}
           />
         </div>
