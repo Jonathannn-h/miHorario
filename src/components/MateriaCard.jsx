@@ -58,11 +58,11 @@ function MateriaCard({ materia, onEditar, onEliminar, onDuplicar, isDark = false
         style={cardStyle}
       >
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-base font-semibold" style={{ color: colorTexto }}>{materia.nombre}</p>
-          <p className="mt-1 text-xs" style={{ color: colorTexto }}>{materia.profesor}</p>
+        <div className="min-w-0 flex-1">
+          <p className="break-words text-base font-semibold" style={{ color: colorTexto }}>{materia.nombre}</p>
+          <p className="mt-1 break-words text-xs" style={{ color: colorTexto }}>{materia.profesor}</p>
         </div>
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             style={botonStyle}
             className="flex h-8 w-8 items-center justify-center rounded-full text-lg leading-none"
@@ -111,7 +111,7 @@ function MateriaCard({ materia, onEditar, onEliminar, onDuplicar, isDark = false
           )}
         </div>
       </div>
-      <div className="mt-3 space-y-1 text-[11px]" style={{ color: colorTexto }}>
+      <div className="mt-3 space-y-1 break-words text-[11px]" style={{ color: colorTexto }}>
         <p>{materia.aula} · {materia.seccion}</p>
         <p>{formatHora(materia.horaInicio)} - {formatHora(materia.horaFin)}</p>
       </div>
