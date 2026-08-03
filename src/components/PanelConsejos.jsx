@@ -37,15 +37,21 @@ function PanelConsejos({ materias, isDark = false }) {
     ? ['Todavía no hay materias cargadas.']
     : consejos.diasMasCargados.map((item) => `${item.dia} (${Math.round(item.totalMinutos / 60)}h)`).join(' · ');
 
-  const huecos = consejos.huecosLibres
-    .filter((hueco) => hueco.duracionMinutos > 0)
-    .slice(0, 4)
-    .map((hueco) => `${hueco.dia}: libre de ${minutosAHora(hueco.inicio)} a ${minutosAHora(hueco.fin)} (${Math.round(hueco.duracionMinutos / 60)}h).`);
+  const huecos = consejos.huecosLibres.map((item) => {
+    if (item.tipo === 'vacio') {
+      return `${item.dia}: No tienes materias este día.`;
+    }
 
-  const huecosVacios = consejos.huecosLibres.filter((hueco) => hueco.duracionMinutos > 0);
-  const mensajeDiasVacios = consejos.cargas
-    .filter((item) => item.totalMinutos === 0)
-    .map((item) => `${item.dia}: No tienes materias este día.`);
+    if (item.tipo === 'sin_huecos') {
+      return `${item.dia}: No hay huecos libres.`;
+    }
+
+    const resumen = item.huecos
+      .map((hueco) => `de ${minutosAHora(hueco.inicio)} a ${minutosAHora(hueco.fin)}`)
+      .join(' y ');
+
+    return `${item.dia}: libres ${resumen}.`;
+  });
 
   return (
     <div className={`mb-6 rounded-[24px] border shadow-sm ${isDark ? 'border-slate-800 bg-slate-900/70' : 'border-slate-200 bg-white/80'}`}>
@@ -64,7 +70,7 @@ function PanelConsejos({ materias, isDark = false }) {
         <div className="grid gap-3 border-t px-4 py-4 md:grid-cols-3">
           {renderBloque('Choques de horario', choques, 'alerta')}
           {renderBloque('Día más cargado', [diasMasCargados], 'info')}
-          {renderBloque('Huecos libres', huecosVacios.length > 0 ? huecos : mensajeDiasVacios.length > 0 ? mensajeDiasVacios : ['No hay huecos libres para mostrar.'], 'default')}
+          {renderBloque('Huecos libres', huecos, 'default')}
         </div>
       )}
     </div>

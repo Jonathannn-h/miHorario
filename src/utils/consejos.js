@@ -57,17 +57,21 @@ export function calcularConsejos(materias = []) {
     .filter((item) => item.totalMinutos === maxCarga)
     .map((item) => ({ ...item }));
 
-  const huecosLibres = materiasPorDia.flatMap(({ dia, materias }) => {
+  const huecosLibres = materiasPorDia.map(({ dia, materias }) => {
     const ordenadas = [...materias].sort((a, b) => horaEnMinutos(a.horaInicio) - horaEnMinutos(b.horaInicio));
 
     if (ordenadas.length === 0) {
-      return [{ dia, inicio: HORA_INICIO_DIA, fin: HORA_FIN_DIA, duracionMinutos: HORA_FIN_DIA - HORA_INICIO_DIA, tipo: 'vacio' }];
+      return {
+        dia,
+        tipo: 'vacio',
+        huecos: [{ inicio: HORA_INICIO_DIA, fin: HORA_FIN_DIA, duracionMinutos: HORA_FIN_DIA - HORA_INICIO_DIA }],
+      };
     }
 
-    const gaps = [];
+    const huecos = [];
 
     if (horaEnMinutos(ordenadas[0].horaInicio) > HORA_INICIO_DIA) {
-      gaps.push({ dia, inicio: HORA_INICIO_DIA, fin: horaEnMinutos(ordenadas[0].horaInicio), duracionMinutos: horaEnMinutos(ordenadas[0].horaInicio) - HORA_INICIO_DIA, tipo: 'gap' });
+      huecos.push({ inicio: HORA_INICIO_DIA, fin: horaEnMinutos(ordenadas[0].horaInicio), duracionMinutos: horaEnMinutos(ordenadas[0].horaInicio) - HORA_INICIO_DIA });
     }
 
     for (let i = 1; i < ordenadas.length; i += 1) {
@@ -77,16 +81,20 @@ export function calcularConsejos(materias = []) {
       const inicioActual = horaEnMinutos(actual.horaInicio);
 
       if (inicioActual > inicioAnterior) {
-        gaps.push({ dia, inicio: inicioAnterior, fin: inicioActual, duracionMinutos: inicioActual - inicioAnterior, tipo: 'gap' });
+        huecos.push({ inicio: inicioAnterior, fin: inicioActual, duracionMinutos: inicioActual - inicioAnterior });
       }
     }
 
     const ultima = ordenadas[ordenadas.length - 1];
     if (horaEnMinutos(ultima.horaFin) < HORA_FIN_DIA) {
-      gaps.push({ dia, inicio: horaEnMinutos(ultima.horaFin), fin: HORA_FIN_DIA, duracionMinutos: HORA_FIN_DIA - horaEnMinutos(ultima.horaFin), tipo: 'gap' });
+      huecos.push({ inicio: horaEnMinutos(ultima.horaFin), fin: HORA_FIN_DIA, duracionMinutos: HORA_FIN_DIA - horaEnMinutos(ultima.horaFin) });
     }
 
-    return gaps;
+    return {
+      dia,
+      tipo: huecos.length === 0 ? 'sin_huecos' : 'huecos',
+      huecos,
+    };
   });
 
   return {
