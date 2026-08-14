@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Boton from '../components/Boton';
 import { formatFecha } from '../utils/formato';
+import { generarSesiones } from '../utils/sesiones';
 
 const STORAGE_KEY = 'miHorario:rangoClases';
 
@@ -14,11 +15,13 @@ function leerRango() {
   }
 }
 
-function Asistencias({ isDark = false }) {
+function Asistencias({ materias, isDark = false }) {
   const [rango, setRango] = useState(leerRango);
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
   const [editando, setEditando] = useState(false);
+
+  const sesiones = rango ? generarSesiones(materias, rango.fechaInicio, rango.fechaFin) : [];
 
   const guardar = (e) => {
     e.preventDefault();
@@ -41,33 +44,45 @@ function Asistencias({ isDark = false }) {
   const mostrarFormulario = !rango || editando;
 
   return (
-    <div className={cardCls}>
-      {mostrarFormulario ? (
-        <form className="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end" onSubmit={guardar}>
-          <div>
-            <label className={labelCls} htmlFor="fechaInicio">Fecha de inicio de clases</label>
-            <input id="fechaInicio" type="date" className={inputCls} value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} required />
+    <div className="grid gap-6">
+      <div className={cardCls}>
+        {mostrarFormulario ? (
+          <form className="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end" onSubmit={guardar}>
+            <div>
+              <label className={labelCls} htmlFor="fechaInicio">Fecha de inicio de clases</label>
+              <input id="fechaInicio" type="date" className={inputCls} value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} required />
+            </div>
+            <div>
+              <label className={labelCls} htmlFor="fechaFin">Fecha de fin de clases</label>
+              <input id="fechaFin" type="date" className={inputCls} value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} required />
+            </div>
+            <div>
+              <Boton type="submit">Guardar</Boton>
+            </div>
+          </form>
+        ) : (
+          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`rounded-2xl border px-4 py-2.5 text-sm font-medium ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-100' : 'border-slate-200 bg-slate-100 text-slate-800'}`}>
+                {formatFecha(rango.fechaInicio)}
+              </span>
+              <span className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>→</span>
+              <span className={`rounded-2xl border px-4 py-2.5 text-sm font-medium ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-100' : 'border-slate-200 bg-slate-100 text-slate-800'}`}>
+                {formatFecha(rango.fechaFin)}
+              </span>
+            </div>
+            <Boton type="button" variant="secondary" onClick={iniciarEdicion}>Cambiar fechas</Boton>
           </div>
-          <div>
-            <label className={labelCls} htmlFor="fechaFin">Fecha de fin de clases</label>
-            <input id="fechaFin" type="date" className={inputCls} value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} required />
-          </div>
-          <div>
-            <Boton type="submit">Guardar</Boton>
-          </div>
-        </form>
-      ) : (
-        <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className={`rounded-2xl border px-4 py-2.5 text-sm font-medium ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-100' : 'border-slate-200 bg-slate-100 text-slate-800'}`}>
-              {formatFecha(rango.fechaInicio)}
-            </span>
-            <span className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>→</span>
-            <span className={`rounded-2xl border px-4 py-2.5 text-sm font-medium ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-100' : 'border-slate-200 bg-slate-100 text-slate-800'}`}>
-              {formatFecha(rango.fechaFin)}
-            </span>
-          </div>
-          <Boton type="button" variant="secondary" onClick={iniciarEdicion}>Cambiar fechas</Boton>
+        )}
+      </div>
+
+      {sesiones.length > 0 && (
+        <div className={cardCls}>
+          <pre className={`whitespace-pre-wrap font-mono text-sm leading-6 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+            {sesiones.map((sesion) =>
+              `${sesion.materia} · ${sesion.dia} ${formatFecha(sesion.fecha)} · ${sesion.horaInicio} - ${sesion.horaFin} · ${sesion.aula} · ${sesion.seccion}`
+            ).join('\n')}
+          </pre>
         </div>
       )}
     </div>
