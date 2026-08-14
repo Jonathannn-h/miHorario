@@ -6,7 +6,7 @@ const OPCIONES = [
   { id: 'horario', label: 'Horario', icon: CalendarDays },
 ];
 
-function MenuLateral({ isDark = false }) {
+function MenuLateral({ vistaActual = 'horario', onNavegar, isDark = false }) {
   const [abierto, setAbierto] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,8 @@ function MenuLateral({ isDark = false }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [abierto]);
 
-  const seleccionar = () => {
+  const seleccionar = (id) => {
+    if (onNavegar) onNavegar(id);
     setAbierto(false);
   };
 
@@ -57,16 +58,19 @@ function MenuLateral({ isDark = false }) {
         </div>
 
         <nav className="flex-1 overflow-y-auto p-3">
-          {OPCIONES.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={seleccionar}
-              className={`mb-1 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${isDark ? 'text-slate-200 hover:bg-slate-800/80' : 'text-slate-700 hover:bg-slate-100'}`}
-            >
-              <Icon className={`h-5 w-5 ${isDark ? 'text-sky-300' : 'text-sky-700'}`} />
-              {label}
-            </button>
-          ))}
+          {OPCIONES.map(({ id, label, icon: Icon }) => {
+            const activa = vistaActual === id;
+            return (
+              <button
+                key={id}
+                onClick={() => seleccionar(id)}
+                className={`mb-1 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${activa ? (isDark ? 'bg-sky-500/15 text-sky-200' : 'bg-sky-100 text-sky-800') : isDark ? 'text-slate-200 hover:bg-slate-800/80' : 'text-slate-700 hover:bg-slate-100'}`}
+              >
+                <Icon className={`h-5 w-5 ${isDark ? 'text-sky-300' : 'text-sky-700'}`} />
+                {label}
+              </button>
+            );
+          })}
         </nav>
 
         <div className={`border-t px-5 py-4 text-xs ${isDark ? 'border-slate-800/80 text-slate-500' : 'border-slate-200 text-slate-500'}`}>

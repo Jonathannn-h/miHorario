@@ -5,6 +5,7 @@ import MenuLateral from './components/MenuLateral';
 import ModalMateria from './components/ModalMateria';
 import PanelConsejos from './components/PanelConsejos';
 import UndoSnackbar from './components/UndoSnackbar';
+import Asistencias from './screens/Asistencias';
 import { useMaterias } from './hooks/useMaterias';
 import { DIAS } from './utils/constantes';
 
@@ -21,6 +22,7 @@ function App() {
   const [lastRemoved, setLastRemoved] = useState(null);
   const [undoOpen, setUndoOpen] = useState(false);
   const [theme, setTheme] = useState(() => leerTemaInicial());
+  const [vista, setVista] = useState('horario');
   const undoTimer = useRef(null);
 
   useEffect(() => {
@@ -180,7 +182,7 @@ function App() {
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.16),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#0f172a_45%,_#111827_100%)] text-slate-100' : 'bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),_transparent_30%),linear-gradient(135deg,_#f8fafc_0%,_#e0f2fe_45%,_#f8fafc_100%)] text-slate-800'}`}>
-      <MenuLateral isDark={isDark} />
+      <MenuLateral vistaActual={vista} onNavegar={setVista} isDark={isDark} />
       <header className={`${isDark ? 'border-slate-800/80 bg-slate-900/70' : 'border-slate-200 bg-white/80'} border-b px-6 py-8 shadow-[0_20px_60px_rgba(2,6,23,0.15)] backdrop-blur`}>
         <div className="mx-auto flex max-w-7xl flex-col gap-4 pl-16 md:flex-row md:items-end md:justify-between">
           <div>
@@ -212,18 +214,24 @@ function App() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <PanelConsejos materias={materias} isDark={isDark} />
-        <div className={`overflow-hidden rounded-[28px] border shadow-[0_25px_80px_rgba(2,6,23,0.15)] ${isDark ? 'border-slate-800/80 bg-slate-900/70' : 'border-slate-200 bg-white/80'}`}>
-          <GrillaHorario
-            materias={materias}
-            onEditar={abrirEditar}
-            onEliminar={handleEliminar}
-            onDuplicar={duplicarMateria}
-            onMover={moverMateria}
-            onCrear={abrirCrear}
-            isDark={isDark}
-          />
-        </div>
+        {vista === 'asistencias' ? (
+          <Asistencias isDark={isDark} />
+        ) : (
+          <>
+            <PanelConsejos materias={materias} isDark={isDark} />
+            <div className={`overflow-hidden rounded-[28px] border shadow-[0_25px_80px_rgba(2,6,23,0.15)] ${isDark ? 'border-slate-800/80 bg-slate-900/70' : 'border-slate-200 bg-white/80'}`}>
+              <GrillaHorario
+                materias={materias}
+                onEditar={abrirEditar}
+                onEliminar={handleEliminar}
+                onDuplicar={duplicarMateria}
+                onMover={moverMateria}
+                onCrear={abrirCrear}
+                isDark={isDark}
+              />
+            </div>
+          </>
+        )}
       </main>
 
       <ModalMateria
