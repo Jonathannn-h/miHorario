@@ -79,9 +79,12 @@ function Asistencias({ materias, isDark = false }) {
       {sesiones.length > 0 && (
         <div className={cardCls}>
           <pre className={`whitespace-pre-wrap font-mono text-sm leading-6 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-            {sesiones.map((sesion) =>
-              `${sesion.materia} · ${sesion.dia} ${formatFecha(sesion.fecha)} · ${sesion.horaInicio} - ${sesion.horaFin} · ${sesion.aula} · ${sesion.seccion}`
-            ).join('\n')}
+            {Object.entries(
+              sesiones.reduce((acc, sesion) => {
+                acc[sesion.materia] = (acc[sesion.materia] || 0) + 1;
+                return acc;
+              }, {})
+            ).map(([materia, cantidad]) => `${materia} · ${cantidad} clases`).join('\n')}
           </pre>
         </div>
       )}
