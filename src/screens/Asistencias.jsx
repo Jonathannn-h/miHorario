@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Boton from '../components/Boton';
 import { formatFecha } from '../utils/formato';
-import { generarSesiones } from '../utils/sesiones';
+import { generarClases } from '../utils/clases';
 
 const STORAGE_KEY = 'miHorario:rangoClases';
 
@@ -21,7 +21,7 @@ function Asistencias({ materias, isDark = false }) {
   const [fechaFin, setFechaFin] = useState('');
   const [editando, setEditando] = useState(false);
 
-  const sesiones = rango ? generarSesiones(materias, rango.fechaInicio, rango.fechaFin) : [];
+  const clases = rango ? generarClases(materias, rango.fechaInicio, rango.fechaFin) : [];
 
   const guardar = (e) => {
     e.preventDefault();
@@ -76,12 +76,12 @@ function Asistencias({ materias, isDark = false }) {
         )}
       </div>
 
-      {sesiones.length > 0 && (
+      {clases.length > 0 && (
         <div className={cardCls}>
           <pre className={`whitespace-pre-wrap font-mono text-sm leading-6 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
             {Object.entries(
-              sesiones.reduce((acc, sesion) => {
-                acc[sesion.materia] = (acc[sesion.materia] || 0) + 1;
+              clases.reduce((acc, clase) => {
+                acc[clase.materia] = (acc[clase.materia] || 0) + 1;
                 return acc;
               }, {})
             ).map(([materia, cantidad]) => `${materia} · ${cantidad} clases`).join('\n')}
