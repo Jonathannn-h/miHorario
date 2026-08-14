@@ -5,6 +5,12 @@ export function formatHora(hora) {
   return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
+export function formatFecha(fecha) {
+  if (!fecha) return '';
+  const date = new Date(`${fecha}T00:00:00`);
+  return date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
 export function horaEnMinutos(hora) {
   const [h, m] = hora.split(':').map(Number);
   return h * 60 + m;
