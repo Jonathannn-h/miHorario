@@ -1,7 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { DIAS } from '../utils/constantes';
+import ModalHorarioMateria from '../components/ModalHorarioMateria';
 
-function Materias({ materias, onEditarGrupo, isDark = false }) {
+function Materias({ materias, onEditarGrupo, onVerGrilla, isDark = false }) {
+  const [seleccionada, setSeleccionada] = useState(null);
+
   const agrupadas = useMemo(() => {
     const grupos = new Map();
 
@@ -77,7 +80,11 @@ function Materias({ materias, onEditarGrupo, isDark = false }) {
               </thead>
               <tbody className={`divide-y ${isDark ? 'divide-slate-800/80' : 'divide-slate-200/80'}`}>
                 {agrupadas.map((materia) => (
-                  <tr key={materia.nombre} className={`transition ${isDark ? 'hover:bg-slate-800/40' : 'hover:bg-slate-50'}`}>
+                  <tr
+                    key={materia.nombre}
+                    onClick={() => setSeleccionada(materia)}
+                    className={`cursor-pointer transition ${isDark ? 'hover:bg-slate-800/40' : 'hover:bg-slate-50'}`}
+                  >
                     <td className={tdCls}>
                       <div className="flex items-center gap-2">
                         <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: materia.color }} />
@@ -108,7 +115,14 @@ function Materias({ materias, onEditarGrupo, isDark = false }) {
                       </span>
                     </td>
                     <td className={tdCls}>
-                      <button type="button" className={editarBtnCls} onClick={() => onEditarGrupo?.(materia.clases[0])}>
+                      <button
+                        type="button"
+                        className={editarBtnCls}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEditarGrupo?.(materia.clases[0]);
+                        }}
+                      >
                         Editar
                       </button>
                     </td>
@@ -119,6 +133,16 @@ function Materias({ materias, onEditarGrupo, isDark = false }) {
           </div>
         )}
       </div>
+
+      <ModalHorarioMateria
+        materia={seleccionada}
+        onClose={() => setSeleccionada(null)}
+        onVerGrilla={() => {
+          setSeleccionada(null);
+          onVerGrilla?.();
+        }}
+        isDark={isDark}
+      />
     </div>
   );
 }

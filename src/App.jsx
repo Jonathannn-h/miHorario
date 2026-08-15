@@ -232,7 +232,7 @@ function App() {
         {vista === 'asistencias' ? (
           <Asistencias materias={materias} isDark={isDark} />
         ) : vista === 'materias' ? (
-          <Materias materias={materias} isDark={isDark} onEditarGrupo={abrirEditarGrupo} />
+          <Materias materias={materias} isDark={isDark} onEditarGrupo={abrirEditarGrupo} onVerGrilla={() => setVista('horario')} />
         ) : (
           <>
             <PanelConsejos materias={materias} isDark={isDark} />
