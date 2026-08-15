@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Menu, X, ClipboardList, CalendarDays } from 'lucide-react';
+import { Menu, X, ClipboardList, CalendarDays, BookOpen } from 'lucide-react';
 
 const OPCIONES = [
   { id: 'asistencias', label: 'Asistencias', icon: ClipboardList },
   { id: 'horario', label: 'Horario', icon: CalendarDays },
+  { id: 'materias', label: 'Materias', icon: BookOpen, navegable: false },
 ];
 
 function MenuLateral({ vistaActual = 'horario', onNavegar, isDark = false }) {
@@ -18,8 +19,8 @@ function MenuLateral({ vistaActual = 'horario', onNavegar, isDark = false }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [abierto]);
 
-  const seleccionar = (id) => {
-    if (onNavegar) onNavegar(id);
+  const seleccionarOpcion = ({ id, navegable }) => {
+    if (navegable !== false && onNavegar) onNavegar(id);
     setAbierto(false);
   };
 
@@ -58,12 +59,13 @@ function MenuLateral({ vistaActual = 'horario', onNavegar, isDark = false }) {
         </div>
 
         <nav className="flex-1 overflow-y-auto p-3">
-          {OPCIONES.map(({ id, label, icon: Icon }) => {
+          {OPCIONES.map((opcion) => {
+            const { id, label, icon: Icon } = opcion;
             const activa = vistaActual === id;
             return (
               <button
                 key={id}
-                onClick={() => seleccionar(id)}
+                onClick={() => seleccionarOpcion(opcion)}
                 className={`mb-1 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${activa ? (isDark ? 'bg-sky-500/15 text-sky-200' : 'bg-sky-100 text-sky-800') : isDark ? 'text-slate-200 hover:bg-slate-800/80' : 'text-slate-700 hover:bg-slate-100'}`}
               >
                 <Icon className={`h-5 w-5 ${isDark ? 'text-sky-300' : 'text-sky-700'}`} />
