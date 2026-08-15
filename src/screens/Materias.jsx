@@ -1,7 +1,13 @@
 import { useMemo, useState } from 'react';
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpDown, Search } from 'lucide-react';
 import { DIAS } from '../utils/constantes';
 import ModalHorarioMateria from '../components/ModalHorarioMateria';
+
+const normalizar = (texto) =>
+  (texto || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
 
 const COMPARADORES = {
   nombre: (a, b) => a.nombre.localeCompare(b.nombre, 'es', { sensitivity: 'base' }),
@@ -13,6 +19,7 @@ const COMPARADORES = {
 function Materias({ materias, onEditarGrupo, onVerGrilla, isDark = false }) {
   const [seleccionada, setSeleccionada] = useState(null);
   const [orden, setOrden] = useState({ columna: null, direccion: 'asc' });
+  const [busqueda, setBusqueda] = useState('');
 
   const agrupadas = useMemo(() => {
     const grupos = new Map();
@@ -53,16 +60,24 @@ function Materias({ materias, onEditarGrupo, onVerGrilla, isDark = false }) {
   }, [materias]);
 
   const visibles = useMemo(() => {
-    const lista = [...agrupadas];
-    if (!orden.columna) return lista;
+    const q = normalizar(busqueda).trim();
+    const filtradas = q
+      ? agrupadas.filter((materia) =>
+          [materia.nombre, materia.profesor, materia.aula].some((campo) => normalizar(campo).includes(q))
+        )
+      : agrupadas;
+
+    if (!orden.columna) return filtradas;
     const comparador = COMPARADORES[orden.columna];
-    if (!comparador) return lista;
+    if (!comparador) return filtradas;
+
+    const lista = [...filtradas];
     lista.sort((a, b) => {
       const resultado = comparador(a, b);
       return orden.direccion === 'asc' ? resultado : -resultado;
     });
     return lista;
-  }, [agrupadas, orden]);
+  }, [agrupadas, orden, busqueda]);
 
   const toggleOrden = (columna) => {
     setOrden((prev) => {
@@ -102,17 +117,32 @@ function Materias({ materias, onEditarGrupo, onVerGrilla, isDark = false }) {
   return (
     <div className="grid gap-6">
       <div className={`${cardCls} p-6`}>
-        <div className="flex items-center justify-between gap-3">
-          <h2 className={`text-lg font-semibold ${isDark ? 'text-slate-50' : 'text-slate-900'}`}>Materias</h2>
-          <span className={`rounded-2xl border px-3 py-1 text-sm font-medium ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-100' : 'border-slate-200 bg-slate-100 text-slate-800'}`}>
-            {agrupadas.length} {agrupadas.length === 1 ? 'materia' : 'materias'}
-          </span>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-3">
+            <h2 className={`text-lg font-semibold ${isDark ? 'text-slate-50' : 'text-slate-900'}`}>Materias</h2>
+            <span className={`rounded-2xl border px-3 py-1 text-sm font-medium ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-100' : 'border-slate-200 bg-slate-100 text-slate-800'}`}>
+              {visibles.length} {visibles.length === 1 ? 'materia' : 'materias'}
+              {busqueda && ` de ${agrupadas.length}`}
+            </span>
+          </div>
+          <div className="relative w-full md:w-80">
+            <Search className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
+            <input
+              type="text"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              placeholder="Buscar por nombre, profesor o aula"
+              className={`w-full rounded-2xl border py-2.5 pl-9 pr-3 text-sm outline-none ring-0 ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100 placeholder:text-slate-500' : 'border-slate-300 bg-slate-50 text-slate-800 placeholder:text-slate-400'}`}
+            />
+          </div>
         </div>
       </div>
 
       <div className={`${cardCls} overflow-hidden`}>
         {agrupadas.length === 0 ? (
           <p className={`p-8 text-center text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Todavía no hay materias cargadas.</p>
+        ) : visibles.length === 0 ? (
+          <p className={`p-8 text-center text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>No se encontraron materias para "{busqueda}".</p>
         ) : (
           <>
             <div className="grid gap-3 p-4 md:hidden">
