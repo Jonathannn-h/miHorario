@@ -28,18 +28,38 @@ function Asistencias({ materias, isDark = false }) {
   const clases = rango ? generarClases(materias, rango.fechaInicio, rango.fechaFin) : [];
 
   const resumen = useMemo(() => {
-    const porMateria = materias
-      .map((materia) => {
-        const deMateria = clases.filter((clase) => clase.materiaId === materia.id);
-        const asistio = deMateria.filter((clase) => estados[clase.id] === ESTADO_ASISTIO).length;
-        const falto = deMateria.filter((clase) => estados[clase.id] === ESTADO_FALTO).length;
-        const noHubo = deMateria.filter((clase) => estados[clase.id] === ESTADO_NO_HUBO).length;
-        const total = deMateria.length;
-        const consideradas = asistio + falto;
-        const porcentaje = consideradas > 0 ? Math.round((asistio / consideradas) * 100) : null;
-        return { materia, total, asistio, falto, noHubo, porcentaje };
-      })
-      .filter((item) => item.total > 0);
+    const grupos = new Map();
+
+    materias.forEach((materia) => {
+      const deMateria = clases.filter((clase) => clase.materiaId === materia.id);
+      if (deMateria.length === 0) return;
+
+      const clave = materia.nombre.trim().toLowerCase();
+      if (!grupos.has(clave)) {
+        grupos.set(clave, {
+          nombre: materia.nombre,
+          materiaId: materia.id,
+          total: 0,
+          asistio: 0,
+          falto: 0,
+          noHubo: 0,
+          clases: [],
+        });
+      }
+      const grupo = grupos.get(clave);
+      grupo.total += deMateria.length;
+      grupo.asistio += deMateria.filter((clase) => estados[clase.id] === ESTADO_ASISTIO).length;
+      grupo.falto += deMateria.filter((clase) => estados[clase.id] === ESTADO_FALTO).length;
+      grupo.noHubo += deMateria.filter((clase) => estados[clase.id] === ESTADO_NO_HUBO).length;
+      grupo.clases.push(...deMateria);
+    });
+
+    const porMateria = Array.from(grupos.values()).map((grupo) => {
+      grupo.clases.sort((a, b) => a.fecha.localeCompare(b.fecha) || a.horaInicio.localeCompare(b.horaInicio));
+      const consideradas = grupo.asistio + grupo.falto;
+      grupo.porcentaje = consideradas > 0 ? Math.round((grupo.asistio / consideradas) * 100) : null;
+      return grupo;
+    });
 
     const totales = porMateria.reduce(
       (acc, item) => ({
@@ -149,9 +169,9 @@ function Asistencias({ materias, isDark = false }) {
             </p>
             <div className="mt-4 grid gap-2 md:grid-cols-2">
               {resumen.porMateria.map((item) => (
-                <div key={item.materia.id} className={`rounded-2xl border px-4 py-3 ${isDark ? 'border-slate-800 bg-slate-950/50' : 'border-slate-200 bg-slate-50/70'}`}>
+                <div key={item.materiaId} className={`rounded-2xl border px-4 py-3 ${isDark ? 'border-slate-800 bg-slate-950/50' : 'border-slate-200 bg-slate-50/70'}`}>
                   <div className="flex items-center justify-between gap-2">
-                    <p className={`truncate text-sm font-medium ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>{item.materia.nombre}</p>
+                    <p className={`truncate text-sm font-medium ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>{item.nombre}</p>
                     {item.porcentaje != null ? (
                       <span className={`rounded-xl px-2 py-0.5 text-xs font-semibold ${isDark ? 'bg-slate-700/60 text-slate-200' : 'bg-slate-200 text-slate-700'}`}>
                         {item.porcentaje}%
@@ -173,19 +193,16 @@ function Asistencias({ materias, isDark = false }) {
           <div className={cardCls}>
             <h2 className={`mb-4 text-lg font-semibold ${isDark ? 'text-slate-50' : 'text-slate-900'}`}>Clases</h2>
             <div className="space-y-6">
-              {resumen.porMateria.map(({ materia }) => {
-                const deMateria = clases.filter((clase) => clase.materiaId === materia.id);
-                return (
-                  <div key={materia.id}>
-                    <p className={`mb-2 text-sm font-semibold ${isDark ? 'text-sky-300' : 'text-sky-700'}`}>{materia.nombre}</p>
-                    <ul className="space-y-2">
-                      {deMateria.map((clase) => (
-                        <FilaClase key={clase.id} clase={clase} estado={estados[clase.id]} onEstado={setEstado} isDark={isDark} />
-                      ))}
-                    </ul>
-                  </div>
-                );
-              })}
+              {resumen.porMateria.map((grupo) => (
+                <div key={grupo.materiaId}>
+                  <p className={`mb-2 text-sm font-semibold ${isDark ? 'text-sky-300' : 'text-sky-700'}`}>{grupo.nombre}</p>
+                  <ul className="space-y-2">
+                    {grupo.clases.map((clase) => (
+                      <FilaClase key={clase.id} clase={clase} estado={estados[clase.id]} onEstado={setEstado} isDark={isDark} />
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
         </>
