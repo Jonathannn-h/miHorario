@@ -121,7 +121,7 @@ function Asistencias({ materias, isDark = false }) {
         {mostrarFormulario ? (
           <form className="grid gap-4 md:grid-cols-[1fr_1fr_auto] md:items-end" onSubmit={guardar}>
             <div>
-              <label className={labelCls} htmlFor="fechaInicio">Fecha de inicio de clases</label>
+              <label className={labelCls} htmlFor="fechaInicio">Fecha de inicio de clases.</label>
               <input id="fechaInicio" type="date" className={inputCls} value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} required />
             </div>
             <div>
