@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import { DIAS } from '../utils/constantes';
-import { horaEnMinutos } from '../utils/formato';
 import ModalHorarioMateria from '../components/ModalHorarioMateria';
 
 const COMPARADORES = {
@@ -9,9 +8,6 @@ const COMPARADORES = {
   profesor: (a, b) => a.profesor.localeCompare(b.profesor, 'es', { sensitivity: 'base' }),
   aula: (a, b) => a.aula.localeCompare(b.aula, 'es', { sensitivity: 'base' }),
   seccion: (a, b) => a.seccion.localeCompare(b.seccion, 'es', { sensitivity: 'base' }),
-  dias: (a, b) => a.dias.length - b.dias.length || DIAS.indexOf(a.dias[0] || '') - DIAS.indexOf(b.dias[0] || ''),
-  horario: (a, b) => a.inicioMin - b.inicioMin,
-  color: (a, b) => parseInt(a.color.replace('#', ''), 16) - parseInt(b.color.replace('#', ''), 16),
 };
 
 function Materias({ materias, onEditarGrupo, onVerGrilla, isDark = false }) {
@@ -51,9 +47,8 @@ function Materias({ materias, onEditarGrupo, onVerGrilla, isDark = false }) {
       });
 
       const dias = DIAS.filter((dia) => grupo.clases.some((materia) => materia.dia === dia));
-      const inicioMin = Math.min(...grupo.clases.map((materia) => horaEnMinutos(materia.horaInicio)));
 
-      return { ...grupo, dias, horario, inicioMin };
+      return { ...grupo, dias, horario };
     });
   }, [materias]);
 
@@ -127,9 +122,9 @@ function Materias({ materias, onEditarGrupo, onVerGrilla, isDark = false }) {
                   {renderTh('profesor', 'Profesor')}
                   {renderTh('aula', 'Aula')}
                   {renderTh('seccion', 'Sección')}
-                  {renderTh('dias', 'Días')}
-                  {renderTh('horario', 'Horario')}
-                  {renderTh('color', 'Color')}
+                  <th className={thCls}>Días</th>
+                  <th className={thCls}>Horario</th>
+                  <th className={thCls}>Color</th>
                   <th className={thCls}>Acciones</th>
                 </tr>
               </thead>
