@@ -114,8 +114,68 @@ function Materias({ materias, onEditarGrupo, onVerGrilla, isDark = false }) {
         {agrupadas.length === 0 ? (
           <p className={`p-8 text-center text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Todavía no hay materias cargadas.</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[780px]">
+          <>
+            <div className="grid gap-3 p-4 md:hidden">
+              {visibles.map((materia) => (
+                <div
+                  key={`card-${materia.nombre}`}
+                  onClick={() => setSeleccionada(materia)}
+                  className={`cursor-pointer rounded-3xl border p-4 transition ${isDark ? 'border-slate-800 bg-slate-900/70 hover:bg-slate-800/50' : 'border-slate-200 bg-white/80 hover:bg-slate-50'}`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: materia.color }} />
+                      <p className={`truncate font-medium ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>{materia.nombre}</p>
+                    </div>
+                    <button
+                      type="button"
+                      className={editarBtnCls}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEditarGrupo?.(materia.clases[0]);
+                      }}
+                    >
+                      Editar
+                    </button>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-sm">
+                    <div>
+                      <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Profesor</p>
+                      <p className={`truncate ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>{materia.profesor}</p>
+                    </div>
+                    <div>
+                      <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Aula</p>
+                      <p className={`truncate ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>{materia.aula}</p>
+                    </div>
+                    <div>
+                      <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Sección</p>
+                      <p className={`truncate ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>{materia.seccion}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {materia.dias.map((dia) => (
+                      <span key={dia} className={badgeCls}>{dia}</span>
+                    ))}
+                  </div>
+
+                  <div className={`mt-3 space-y-1 text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+                    {materia.horario.map((hora) => (
+                      <div key={hora}>{hora}</div>
+                    ))}
+                  </div>
+
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="h-4 w-4 rounded-md border" style={{ backgroundColor: materia.color }} />
+                    <span className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{materia.color}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full min-w-[780px]">
               <thead className={`${isDark ? 'border-b border-slate-800 bg-slate-950/50' : 'border-b border-slate-200 bg-slate-50'}`}>
                 <tr>
                   {renderTh('nombre', 'Materia')}
@@ -180,7 +240,8 @@ function Materias({ materias, onEditarGrupo, onVerGrilla, isDark = false }) {
                 ))}
               </tbody>
             </table>
-          </div>
+            </div>
+          </>
         )}
       </div>
 
