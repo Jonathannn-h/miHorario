@@ -218,7 +218,7 @@ function App() {
         {vista === 'asistencias' ? (
           <Asistencias materias={materias} isDark={isDark} />
         ) : vista === 'materias' ? (
-          <Materias isDark={isDark} />
+          <Materias materias={materias} isDark={isDark} />
         ) : (
           <>
             <PanelConsejos materias={materias} isDark={isDark} />
