@@ -6,6 +6,7 @@ import ModalMateria from './components/ModalMateria';
 import PanelConsejos from './components/PanelConsejos';
 import UndoSnackbar from './components/UndoSnackbar';
 import Asistencias from './screens/Asistencias';
+import Materias from './screens/Materias';
 import { useMaterias } from './hooks/useMaterias';
 import { DIAS } from './utils/constantes';
 
@@ -216,6 +217,8 @@ function App() {
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {vista === 'asistencias' ? (
           <Asistencias materias={materias} isDark={isDark} />
+        ) : vista === 'materias' ? (
+          <Materias isDark={isDark} />
         ) : (
           <>
             <PanelConsejos materias={materias} isDark={isDark} />

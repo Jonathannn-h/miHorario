@@ -4,7 +4,7 @@ import { Menu, X, ClipboardList, CalendarDays, BookOpen } from 'lucide-react';
 const OPCIONES = [
   { id: 'asistencias', label: 'Asistencias', icon: ClipboardList },
   { id: 'horario', label: 'Horario', icon: CalendarDays },
-  { id: 'materias', label: 'Materias', icon: BookOpen, navegable: false },
+  { id: 'materias', label: 'Materias', icon: BookOpen },
 ];
 
 function MenuLateral({ vistaActual = 'horario', onNavegar, isDark = false }) {
