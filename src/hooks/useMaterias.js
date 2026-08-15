@@ -27,6 +27,15 @@ export function useMaterias() {
     setMaterias((prev) => prev.map((materia) => (materia.id === id ? { ...materia, ...data } : materia)));
   };
 
+  const editarMateriasPorNombre = (nombre, data) => {
+    const clave = String(nombre || '').trim().toLowerCase();
+    setMaterias((prev) =>
+      prev.map((materia) =>
+        String(materia.nombre || '').trim().toLowerCase() === clave ? { ...materia, ...data } : materia
+      )
+    );
+  };
+
   const duplicarMateria = (id) => {
     setMaterias((prev) => {
       const materia = prev.find((item) => item.id === id);
@@ -57,5 +66,5 @@ export function useMaterias() {
     setMaterias((prev) => prev.map((materia) => (materia.id === id ? { ...materia, dia } : materia)));
   };
 
-  return { materias, agregarMateria, editarMateria, duplicarMateria, eliminarMateria, restaurarMateria, moverMateria };
+  return { materias, agregarMateria, editarMateria, editarMateriasPorNombre, duplicarMateria, eliminarMateria, restaurarMateria, moverMateria };
 }

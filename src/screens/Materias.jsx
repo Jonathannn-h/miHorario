@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { DIAS } from '../utils/constantes';
 
-function Materias({ materias, isDark = false }) {
+function Materias({ materias, onEditarGrupo, isDark = false }) {
   const agrupadas = useMemo(() => {
     const grupos = new Map();
 
@@ -44,6 +44,7 @@ function Materias({ materias, isDark = false }) {
   const thCls = `px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`;
   const tdCls = `px-4 py-3 text-sm ${isDark ? 'text-slate-200' : 'text-slate-700'}`;
   const badgeCls = `inline-block rounded-xl border px-2 py-0.5 text-xs font-medium ${isDark ? 'border-slate-700 bg-slate-800/80 text-slate-300' : 'border-slate-200 bg-slate-100 text-slate-600'}`;
+  const editarBtnCls = `rounded-xl border px-3 py-1.5 text-xs font-medium transition ${isDark ? 'border-slate-600 bg-slate-800/80 text-slate-200 hover:bg-slate-700/90' : 'border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200'}`;
 
   return (
     <div className="grid gap-6">
@@ -61,7 +62,7 @@ function Materias({ materias, isDark = false }) {
           <p className={`p-8 text-center text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Todavía no hay materias cargadas.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px]">
+            <table className="w-full min-w-[780px]">
               <thead className={`${isDark ? 'border-b border-slate-800 bg-slate-950/50' : 'border-b border-slate-200 bg-slate-50'}`}>
                 <tr>
                   <th className={thCls}>Materia</th>
@@ -71,6 +72,7 @@ function Materias({ materias, isDark = false }) {
                   <th className={thCls}>Días</th>
                   <th className={thCls}>Horario</th>
                   <th className={thCls}>Color</th>
+                  <th className={thCls}>Acciones</th>
                 </tr>
               </thead>
               <tbody className={`divide-y ${isDark ? 'divide-slate-800/80' : 'divide-slate-200/80'}`}>
@@ -104,6 +106,11 @@ function Materias({ materias, isDark = false }) {
                         <span className="h-4 w-4 rounded-md border" style={{ backgroundColor: materia.color }} />
                         <span className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{materia.color}</span>
                       </span>
+                    </td>
+                    <td className={tdCls}>
+                      <button type="button" className={editarBtnCls} onClick={() => onEditarGrupo?.(materia.clases[0])}>
+                        Editar
+                      </button>
                     </td>
                   </tr>
                 ))}

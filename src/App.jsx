@@ -17,9 +17,10 @@ function leerTemaInicial() {
 }
 
 function App() {
-  const { materias, agregarMateria, editarMateria, duplicarMateria, eliminarMateria, restaurarMateria, moverMateria } = useMaterias();
+  const { materias, agregarMateria, editarMateria, editarMateriasPorNombre, duplicarMateria, eliminarMateria, restaurarMateria, moverMateria } = useMaterias();
   const [modalOpen, setModalOpen] = useState(false);
   const [materiaEditando, setMateriaEditando] = useState(null);
+  const [editandoGrupo, setEditandoGrupo] = useState(false);
   const [lastRemoved, setLastRemoved] = useState(null);
   const [undoOpen, setUndoOpen] = useState(false);
   const [theme, setTheme] = useState(() => leerTemaInicial());
@@ -41,17 +42,30 @@ function App() {
 
   const abrirEditar = (materia) => {
     setMateriaEditando(materia);
+    setEditandoGrupo(false);
+    setModalOpen(true);
+  };
+
+  const abrirEditarGrupo = (materia) => {
+    setMateriaEditando(materia);
+    setEditandoGrupo(true);
     setModalOpen(true);
   };
 
   const cerrarModal = () => {
     setModalOpen(false);
     setMateriaEditando(null);
+    setEditandoGrupo(false);
   };
 
   const guardarMateria = (data) => {
     if (materiaEditando) {
-      editarMateria(materiaEditando.id, data);
+      if (editandoGrupo) {
+        const { nombre, profesor, aula, seccion, color } = data;
+        editarMateriasPorNombre(materiaEditando.nombre, { nombre, profesor, aula, seccion, color });
+      } else {
+        editarMateria(materiaEditando.id, data);
+      }
     } else {
       agregarMateria(data);
     }
@@ -218,7 +232,7 @@ function App() {
         {vista === 'asistencias' ? (
           <Asistencias materias={materias} isDark={isDark} />
         ) : vista === 'materias' ? (
-          <Materias materias={materias} isDark={isDark} />
+          <Materias materias={materias} isDark={isDark} onEditarGrupo={abrirEditarGrupo} />
         ) : (
           <>
             <PanelConsejos materias={materias} isDark={isDark} />
@@ -242,6 +256,7 @@ function App() {
         onClose={cerrarModal}
         materia={materiaEditando}
         onSubmit={guardarMateria}
+        soloDatosCompartidos={editandoGrupo}
         isDark={isDark}
       />
 
