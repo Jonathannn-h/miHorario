@@ -114,7 +114,6 @@ function Asistencias({ materias, isDark = false }) {
   };
 
   const mostrarFormulario = !rango || editando;
-
   return (
     <div className="grid gap-6">
       <div className={cardCls}>
