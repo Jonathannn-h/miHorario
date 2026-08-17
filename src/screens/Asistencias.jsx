@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Boton from '../components/Boton';
 import FilaClase from '../components/FilaClase';
 import { formatFecha } from '../utils/formato';
@@ -18,14 +19,49 @@ function leerRango() {
   }
 }
 
+function hoyStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 function Asistencias({ materias, isDark = false }) {
   const [rango, setRango] = useState(leerRango);
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
   const [editando, setEditando] = useState(false);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState('');
   const { estados, setEstado } = useEstadosClases();
 
   const clases = rango ? generarClases(materias, rango.fechaInicio, rango.fechaFin) : [];
+
+  const clasesDelDia = useMemo(() => {
+    if (!fechaSeleccionada) return clases;
+    return clases.filter((clase) => clase.fecha === fechaSeleccionada);
+  }, [clases, fechaSeleccionada]);
+
+  const fechasConClases = useMemo(() => {
+    const set = new Set(clases.map((clase) => clase.fecha));
+    return Array.from(set).sort();
+  }, [clases]);
+
+  const indiceActual = fechasConClases.indexOf(fechaSeleccionada);
+
+  const irAnterior = () => {
+    if (fechasConClases.length === 0) return;
+    if (indiceActual <= 0) {
+      setFechaSeleccionada(fechasConClases[fechasConClases.length - 1]);
+    } else {
+      setFechaSeleccionada(fechasConClases[indiceActual - 1]);
+    }
+  };
+
+  const irSiguiente = () => {
+    if (fechasConClases.length === 0) return;
+    if (indiceActual < 0 || indiceActual >= fechasConClases.length - 1) {
+      setFechaSeleccionada(fechasConClases[0]);
+    } else {
+      setFechaSeleccionada(fechasConClases[indiceActual + 1]);
+    }
+  };
 
   const resumen = useMemo(() => {
     const grupos = new Map();
@@ -101,6 +137,9 @@ function Asistencias({ materias, isDark = false }) {
     return `${base} ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-400' : 'border-slate-200 bg-slate-100 text-slate-500'}`;
   };
 
+  const navBtnCls = `flex h-10 w-10 items-center justify-center rounded-xl border text-sm font-medium transition ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-200 hover:bg-slate-700/90' : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200'}`;
+  const navBtnTextCls = `rounded-xl border px-3 py-2 text-sm font-medium transition ${isDark ? 'border-slate-700/70 bg-slate-800/80 text-slate-200 hover:bg-slate-700/90' : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200'}`;
+
   const tonos = {
     asistio: {
       activa: isDark ? 'border-emerald-400/70 bg-emerald-500/20 text-emerald-300' : 'border-emerald-500 bg-emerald-500/15 text-emerald-700',
@@ -147,6 +186,37 @@ function Asistencias({ materias, isDark = false }) {
         )}
       </div>
 
+      {clases.length > 0 && !mostrarFormulario && (
+        <div className={`${cardCls} flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between`}>
+          <div className="flex items-center gap-2">
+            <button type="button" onClick={irAnterior} className={navBtnCls}>
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <input
+              type="date"
+              value={fechaSeleccionada}
+              min={rango.fechaInicio}
+              max={rango.fechaFin}
+              onChange={(e) => setFechaSeleccionada(e.target.value)}
+              className={`w-full rounded-2xl border px-3 py-2.5 text-sm outline-none ring-0 sm:w-auto ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-100' : 'border-slate-300 bg-slate-50 text-slate-800'}`}
+            />
+            <button type="button" onClick={irSiguiente} className={navBtnCls}>
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            {fechaSeleccionada && (
+              <button type="button" onClick={() => setFechaSeleccionada('')} className={navBtnTextCls}>
+                Ver todo
+              </button>
+            )}
+            <button type="button" onClick={() => setFechaSeleccionada(hoyStr())} className={navBtnTextCls}>
+              Hoy
+            </button>
+          </div>
+        </div>
+      )}
+
       {clases.length > 0 && (
         <>
           <div className={cardCls}>
@@ -190,18 +260,36 @@ function Asistencias({ materias, isDark = false }) {
           </div>
 
           <div className={cardCls}>
-            <h2 className={`mb-4 text-lg font-semibold ${isDark ? 'text-slate-50' : 'text-slate-900'}`}>Clases</h2>
-            <div className="space-y-6">
-              {resumen.porMateria.map((grupo) => (
-                <div key={grupo.materiaId}>
-                  <p className={`mb-2 text-sm font-semibold ${isDark ? 'text-sky-300' : 'text-sky-700'}`}>{grupo.nombre}</p>
-                  <ul className="space-y-2">
-                    {grupo.clases.map((clase) => (
-                      <FilaClase key={clase.id} clase={clase} estado={estados[clase.id]} onEstado={setEstado} isDark={isDark} />
-                    ))}
-                  </ul>
-                </div>
-              ))}
+            <h2 className={`mb-1 text-lg font-semibold ${isDark ? 'text-slate-50' : 'text-slate-900'}`}>
+              {fechaSeleccionada ? `Clases · ${formatFecha(fechaSeleccionada)}` : 'Clases'}
+            </h2>
+            {!fechaSeleccionada && (
+              <p className={`mb-4 text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                Seleccioná un día para ver solo las clases de esa fecha.
+              </p>
+            )}
+            <div className="mt-4 space-y-6">
+              {resumen.porMateria.map((grupo) => {
+                const clasesFiltradas = fechaSeleccionada
+                  ? grupo.clases.filter((clase) => clase.fecha === fechaSeleccionada)
+                  : grupo.clases;
+                if (clasesFiltradas.length === 0) return null;
+                return (
+                  <div key={grupo.materiaId}>
+                    <p className={`mb-2 text-sm font-semibold ${isDark ? 'text-sky-300' : 'text-sky-700'}`}>{grupo.nombre}</p>
+                    <ul className="space-y-2">
+                      {clasesFiltradas.map((clase) => (
+                        <FilaClase key={clase.id} clase={clase} estado={estados[clase.id]} onEstado={setEstado} isDark={isDark} />
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
+              {fechaSeleccionada && clasesDelDia.length === 0 && (
+                <p className={`py-8 text-center text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                  No hay clases el día seleccionado.
+                </p>
+              )}
             </div>
           </div>
         </>
