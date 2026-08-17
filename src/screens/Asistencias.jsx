@@ -28,7 +28,7 @@ function Asistencias({ materias, isDark = false }) {
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
   const [editando, setEditando] = useState(false);
-  const [fechaSeleccionada, setFechaSeleccionada] = useState('');
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(hoyStr);
   const { estados, setEstado } = useEstadosClases();
 
   const clases = rango ? generarClases(materias, rango.fechaInicio, rango.fechaFin) : [];
