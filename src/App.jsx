@@ -235,7 +235,6 @@ function App() {
           <Materias materias={materias} isDark={isDark} onEditarGrupo={abrirEditarGrupo} onVerGrilla={() => setVista('horario')} />
         ) : (
           <>
-            <PanelConsejos materias={materias} isDark={isDark} />
             <div className={`overflow-hidden rounded-[28px] border shadow-[0_25px_80px_rgba(2,6,23,0.15)] ${isDark ? 'border-slate-800/80 bg-slate-900/70' : 'border-slate-200 bg-white/80'}`}>
               <GrillaHorario
                 materias={materias}
@@ -247,6 +246,7 @@ function App() {
                 isDark={isDark}
               />
             </div>
+            <PanelConsejos materias={materias} isDark={isDark} />
           </>
         )}
       </main>

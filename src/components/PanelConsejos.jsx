@@ -54,7 +54,7 @@ function PanelConsejos({ materias, isDark = false }) {
   });
 
   return (
-    <div className={`mb-6 rounded-[24px] border shadow-sm ${isDark ? 'border-slate-800 bg-slate-900/70' : 'border-slate-200 bg-white/80'}`}>
+    <div className={`mb-6 mt-6 rounded-[24px] border shadow-sm ${isDark ? 'border-slate-800 bg-slate-900/70' : 'border-slate-200 bg-white/80'}`}>
       <button
         onClick={() => setAbierto((prev) => !prev)}
         className={`flex w-full items-center justify-between px-4 py-4 text-left ${isDark ? 'text-slate-100' : 'text-slate-800'}`}
