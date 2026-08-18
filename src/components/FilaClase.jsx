@@ -24,38 +24,54 @@ function opcionesEstado(isDark) {
   };
 }
 
-function FilaClase({ clase, estado, onEstado, isDark = false }) {
+function FilaClase({ clase, estado, nota, onEstado, onNota, isDark = false }) {
   const opciones = opcionesEstado(isDark);
 
   return (
-    <li className={`flex flex-col gap-3 rounded-2xl border p-3 md:flex-row md:items-center md:justify-between ${isDark ? 'border-slate-800 bg-slate-900/60' : 'border-slate-200 bg-white/60'}`}>
-      <div className="min-w-0">
-        <p className={`text-sm font-medium ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
-          {formatFecha(clase.fecha)}
-          <span className={`ml-2 text-xs font-normal ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-            {clase.horaInicio} - {clase.horaFin}
-          </span>
-        </p>
-        <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-          {[clase.aula, clase.seccion].filter(Boolean).join(' · ')}
-        </p>
+    <li className={`flex flex-col gap-3 rounded-2xl border p-3 ${isDark ? 'border-slate-800 bg-slate-900/60' : 'border-slate-200 bg-white/60'}`}>
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0">
+          <p className={`text-sm font-medium ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
+            {formatFecha(clase.fecha)}
+            <span className={`ml-2 text-xs font-normal ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              {clase.horaInicio} - {clase.horaFin}
+            </span>
+          </p>
+          <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+            {[clase.aula, clase.seccion].filter(Boolean).join(' · ')}
+          </p>
+          {nota && (
+            <p className={`mt-1 rounded-lg px-2 py-0.5 text-xs ${isDark ? 'bg-slate-800/80 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>
+              {nota}
+            </p>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {ESTADOS_CLASE.map((opcion) => {
+            const activo = estado === opcion.id;
+            const estilos = opciones[opcion.id];
+            return (
+              <button
+                key={opcion.id}
+                type="button"
+                onClick={() => onEstado(clase.id, activo ? null : opcion.id)}
+                className={`rounded-xl border px-3 py-1.5 text-sm font-medium transition ${activo ? estilos.activa : estilos.inactiva}`}
+              >
+                {opcion.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
-      <div className="flex flex-wrap gap-2">
-        {ESTADOS_CLASE.map((opcion) => {
-          const activo = estado === opcion.id;
-          const estilos = opciones[opcion.id];
-          return (
-            <button
-              key={opcion.id}
-              type="button"
-              onClick={() => onEstado(clase.id, activo ? null : opcion.id)}
-              className={`rounded-xl border px-3 py-1.5 text-sm font-medium transition ${activo ? estilos.activa : estilos.inactiva}`}
-            >
-              {opcion.label}
-            </button>
-          );
-        })}
-      </div>
+      {estado === 'no_hubo' && (
+        <input
+          type="text"
+          value={nota || ''}
+          onChange={(e) => onNota?.(clase.id, e.target.value)}
+          placeholder="Motivo (opcional): feriado, profesor ausente..."
+          className={`w-full rounded-xl border px-3 py-2 text-xs outline-none ring-0 ${isDark ? 'border-slate-700 bg-slate-950/80 text-slate-200 placeholder:text-slate-500' : 'border-slate-300 bg-slate-50 text-slate-700 placeholder:text-slate-400'}`}
+        />
+      )}
     </li>
   );
 }

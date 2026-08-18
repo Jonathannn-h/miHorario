@@ -1,23 +1,29 @@
 import { useEffect, useState } from 'react';
 
-const STORAGE_KEY = 'miHorario:estadosClases';
+const STORAGE_KEY_ESTADOS = 'miHorario:estadosClases';
+const STORAGE_KEY_NOTAS = 'miHorario:notasClases';
 
-function leerStorage() {
-  if (typeof window === 'undefined') return {};
+function leerStorage(key, fallback) {
+  if (typeof window === 'undefined') return fallback;
   try {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : {};
+    const saved = window.localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : fallback;
   } catch {
-    return {};
+    return fallback;
   }
 }
 
 export function useEstadosClases() {
-  const [estados, setEstados] = useState(leerStorage);
+  const [estados, setEstados] = useState(() => leerStorage(STORAGE_KEY_ESTADOS, {}));
+  const [notas, setNotas] = useState(() => leerStorage(STORAGE_KEY_NOTAS, {}));
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(estados));
+    window.localStorage.setItem(STORAGE_KEY_ESTADOS, JSON.stringify(estados));
   }, [estados]);
+
+  useEffect(() => {
+    window.localStorage.setItem(STORAGE_KEY_NOTAS, JSON.stringify(notas));
+  }, [notas]);
 
   const setEstado = (claseId, estado) => {
     setEstados((prev) => {
@@ -29,7 +35,26 @@ export function useEstadosClases() {
       }
       return next;
     });
+    if (estado !== 'no_hubo') {
+      setNotas((prev) => {
+        if (!(claseId in prev)) return prev;
+        const next = { ...prev };
+        delete next[claseId];
+        return next;
+      });
+    }
   };
 
-  return { estados, setEstado };
+  const setNota = (claseId, nota) => {
+    setNotas((prev) => {
+      if (!nota) {
+        const next = { ...prev };
+        delete next[claseId];
+        return next;
+      }
+      return { ...prev, [claseId]: nota };
+    });
+  };
+
+  return { estados, setEstado, notas, setNota };
 }

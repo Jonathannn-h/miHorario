@@ -29,7 +29,7 @@ function Asistencias({ materias, isDark = false }) {
   const [fechaFin, setFechaFin] = useState('');
   const [editando, setEditando] = useState(false);
   const [fechaSeleccionada, setFechaSeleccionada] = useState(hoyStr);
-  const { estados, setEstado } = useEstadosClases();
+  const { estados, setEstado, notas, setNota } = useEstadosClases();
 
   const clases = rango ? generarClases(materias, rango.fechaInicio, rango.fechaFin) : [];
 
@@ -297,7 +297,7 @@ function Asistencias({ materias, isDark = false }) {
                     <p className={`mb-2 text-sm font-semibold ${isDark ? 'text-sky-300' : 'text-sky-700'}`}>{grupo.nombre}</p>
                     <ul className="space-y-2">
                       {clasesFiltradas.map((clase) => (
-                        <FilaClase key={clase.id} clase={clase} estado={estados[clase.id]} onEstado={setEstado} isDark={isDark} />
+                        <FilaClase key={clase.id} clase={clase} estado={estados[clase.id]} nota={notas[clase.id]} onEstado={setEstado} onNota={setNota} isDark={isDark} />
                       ))}
                     </ul>
                   </div>
