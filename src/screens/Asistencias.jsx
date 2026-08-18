@@ -152,6 +152,10 @@ function Asistencias({ materias, isDark = false }) {
     },
   };
 
+  const marcarTodasDelDia = (estado) => {
+    clasesDelDia.forEach((clase) => setEstado(clase.id, estado));
+  };
+
   const mostrarFormulario = !rango || editando;
   return (
     <div className="grid gap-6">
@@ -205,6 +209,20 @@ function Asistencias({ materias, isDark = false }) {
             </button>
           </div>
           <div className="flex items-center gap-2">
+            {fechaSeleccionada && (
+              <>
+                <button type="button" onClick={() => marcarTodasDelDia(ESTADO_ASISTIO)} className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${isDark ? 'border-emerald-400/60 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25' : 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'}`}>
+                  Todas asistí
+                </button>
+                <button type="button" onClick={() => marcarTodasDelDia(ESTADO_FALTO)} className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${isDark ? 'border-rose-400/60 bg-rose-500/15 text-rose-300 hover:bg-rose-500/25' : 'border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100'}`}>
+                  Todas falté
+                </button>
+                <button type="button" onClick={() => marcarTodasDelDia(ESTADO_NO_HUBO)} className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition ${isDark ? 'border-slate-400/60 bg-slate-500/15 text-slate-200 hover:bg-slate-500/25' : 'border-slate-300 bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+                  Todas no hubo
+                </button>
+                <span className={`hidden h-5 w-px sm:block ${isDark ? 'bg-slate-700' : 'bg-slate-300'}`} />
+              </>
+            )}
             {fechaSeleccionada && (
               <button type="button" onClick={() => setFechaSeleccionada('')} className={navBtnTextCls}>
                 Ver todo
