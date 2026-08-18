@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatHora } from '../utils/formato';
 import ConfirmDialog from './ConfirmDialog';
 
@@ -19,6 +19,18 @@ function MateriaCard({ materia, onEditar, onEliminar, onDuplicar, isDark = false
   const [removing, setRemoving] = useState(false);
   const [dropPulse, setDropPulse] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const cerrar = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', cerrar);
+    return () => document.removeEventListener('mousedown', cerrar);
+  }, [menuOpen]);
   const colorBase = materia.color || '#60a5fa';
   const colorTexto = obtenerColorTextoContraste(colorBase);
   const esFondoClaro = colorTexto === '#0f172a';
@@ -76,7 +88,7 @@ function MateriaCard({ materia, onEditar, onEliminar, onDuplicar, isDark = false
           </button>
 
           {menuOpen && (
-            <div className={`absolute right-0 z-10 mt-2 min-w-[140px] rounded-2xl border p-2 shadow-lg ${isDark ? 'border-slate-700 bg-slate-900/95 text-slate-100' : 'border-slate-200 bg-white/95 text-slate-800'}`}>
+            <div ref={menuRef} className={`absolute right-0 z-10 mt-2 min-w-[140px] rounded-2xl border p-2 shadow-lg ${isDark ? 'border-slate-700 bg-slate-900/95 text-slate-100' : 'border-slate-200 bg-white/95 text-slate-800'}`}>
               <button
                 className="flex w-full items-center rounded-xl px-3 py-2 text-left text-sm transition hover:bg-slate-100/70 dark:hover:bg-slate-800/70"
                 onClick={(e) => {
