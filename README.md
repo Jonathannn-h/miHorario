@@ -24,14 +24,14 @@ Aplicación web para organizar tu horario de clases, llevar el control de asiste
 - Resumen de asistencia por materia y resumen global
 - Navegador de días (anterior/siguiente, ir a una fecha, volver a "Hoy")
 
-### 📚 Materias
+### Materias
 - Tabla de todas las materias, con vista de tarjetas en mobile
 - Búsqueda por nombre, profesor o aula
 - Ordenamiento por columnas
 - Vista rápida de la mini-grilla semanal de cada materia
 - Edición de datos compartidos (profesor, aula, sección, color) para todos los días de esa materia
 
-## 🛠️ Tecnologías
+## Tecnologías
 
 - **React** + **Vite**
 - **Tailwind CSS**
